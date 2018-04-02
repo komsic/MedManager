@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Med Manager</string>
+    <string name="app_name">Med-Manager</string>
+    <string name="msg_start_date">Start Date</string>
+    <string name="msg_end_date">End Date</string>
+    <string name="add_a_reminder"><u>+ Add a reminder</u></string>
+    <string name="days"><u>Daily</u></string>
+    <string name="reminder_time"><u>8:00 am</u></string>
 </resources>

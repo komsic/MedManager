@@ -1,5 +1,6 @@
 package com.komsic.android.medmanager.data.model;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class Med {
         this.id = id;
         this.reminders = reminders;
     }
+
+
 
     // [START post_to_map]
     @Exclude

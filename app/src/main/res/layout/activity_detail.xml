@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context="com.komsic.android.med_manager.DetailActivity">
+
+    <TextView
+        android:id="@+id/text_med_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Amala"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginLeft="8dp"/>
+
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+        app:layout_constraintLeft_toLeftOf="@+id/text_med_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_med_name"
+        android:text="For Fever"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="@+id/text_description"
+        app:layout_constraintTop_toBottomOf="@+id/text_end_date">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_add_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="italic"
+        android:text="@string/add_a_reminder"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+        app:layout_constraintLeft_toLeftOf="@+id/linear_layout_reminder"
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout_reminder"/>
+
+    <TextView
+        android:id="@+id/text_start_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#F44336"
+        android:textStyle="italic"
+        android:text="Starts on Wed 19th, Apr 2018"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_description"/>
+
+    <TextView
+        android:id="@+id/text_end_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        android:layout_marginTop="4dp"
+        android:textColor="#4CAF50"
+        android:textStyle="italic"
+        android:text="Ends on Tue 20th, May 2018"
+        app:layout_constraintLeft_toLeftOf="@+id/text_start_date"
+        app:layout_constraintTop_toBottomOf="@+id/text_start_date"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/view"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_add_reminder"
+        app:layout_constraintVertical_bias="0.76"/>
+
+    <TextView
+        android:id="@+id/text_created_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edited on Tue 20th, May 2018"
+        android:textStyle="italic"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/text_add_reminder"
+        app:layout_constraintRight_toRightOf="@+id/text_end_date"
+        app:layout_constraintTop_toBottomOf="@+id/text_last_edited_date"
+        app:layout_constraintVertical_bias="0.483"/>
+
+    <TextView
+        android:id="@+id/text_last_edited_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        android:text="Created on Tue 20th, May 2018"
+        app:layout_constraintLeft_toLeftOf="@+id/text_created_date"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/view"/>
+</android.support.constraint.ConstraintLayout>
