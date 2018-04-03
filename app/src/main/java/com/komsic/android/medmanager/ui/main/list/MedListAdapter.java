@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.model.Med;
+import com.komsic.android.medmanager.ui.detail.DetailActivity;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class MedListAdapter extends
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext, DetailActivity.class);
-//                intent.putExtra("key", currentMed.id);
-//                startActivity(intent);
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("key", currentMed.id);
+                mContext.startActivity(intent);
             }
         });
     }

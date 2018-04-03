@@ -1,10 +1,13 @@
 package com.komsic.android.medmanager.ui.main.add_med;
 
+import android.content.Intent;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
+import com.komsic.android.medmanager.ui.detail.DetailActivity;
 
 import java.util.Calendar;
 
@@ -41,8 +44,8 @@ public class AddMedDialogPresenter<V extends AddMedDialogMvpView> extends BasePr
         newMed.id = databaseRef.child("medList").push().getKey();
         databaseRef.child("medList" + "/" + newMed.id).setValue(newMed);
 
-//        Intent intent = new Intent(getActivity(), DetailActivity.class);
-//        intent.putExtra("key", newMed.id);
-//        startActivity(intent);
+        Intent intent = new Intent(getMvpView().getContext(), DetailActivity.class);
+        intent.putExtra("key", newMed.id);
+        getMvpView().getContext().startActivity(intent);
     }
 }

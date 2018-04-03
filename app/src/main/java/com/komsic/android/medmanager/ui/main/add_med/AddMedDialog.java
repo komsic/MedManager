@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
+import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.base.BaseDialog;
 import com.komsic.android.medmanager.ui.base.DialogMvpView;
 import com.komsic.android.medmanager.util.CalendarUtil;
@@ -114,5 +117,10 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
     @Override
     public void dismissDialog() {
         dismiss();
+    }
+
+    @Override
+    public FragmentActivity getContext() {
+        return getActivity();
     }
 }
