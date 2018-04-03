@@ -13,6 +13,7 @@ import android.view.View;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
+import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
 import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
 
@@ -74,8 +75,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         fabNewMed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DialogAddMed dialogAddMed = new DialogAddMed();
-//                dialogAddMed.show(getSupportFragmentManager(), "DialogAddMed");
+                mPresenter.openAddMedDialog(getSupportFragmentManager());
             }
         });
     }
