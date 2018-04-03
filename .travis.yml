@@ -20,7 +20,6 @@ android :
     - 'google-gdk-lince-.+'
 before_script : 
         - mkdir -p "$ANDROID_HOME/lincences"
-        - cp ./lincences/* "$ANDROID_HOME/lincences"
 before_cache: 
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
