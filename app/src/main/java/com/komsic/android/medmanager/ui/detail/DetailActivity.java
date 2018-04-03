@@ -24,10 +24,14 @@ import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.base.DialogMvpView;
 import com.komsic.android.medmanager.util.CalendarUtil;
+import com.komsic.android.medmanager.util.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class DetailActivity extends BaseActivity implements DetailMvpView {
 
@@ -113,67 +117,7 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        mPresenter.onPause();
-    }
-
-    public void onDayReminderClick(final View view) {
-
-        //This variable will allow us to determine view's position and therefore the appropriate reminder for it
-        final LinearLayout layout = (LinearLayout) view.getParent();
-        final int viewPositionInList = reminderViews.indexOf(layout);
-        Reminder viewReminder = mPresenter.getReminder(viewPositionInList);
-
-//        final DialogChooseDay dialogChooseDay = new DialogChooseDay();
-//        dialogChooseDay.setDayStateMap(viewReminder.dayStates);
-//        dialogChooseDay.show(getSupportFragmentManager(), "dialogChooseDay");
-
-//        getSupportFragmentManager().executePendingTransactions();
-//        dialogChooseDay.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                mSelectedMed.updateReminderDayState(viewPositionInList, dialogChooseDay.getDayStateMap());
-//                reload(layout, mSelectedMed.reminders.get(viewPositionInList));
-//            }
-//        });
-    }
-
-    public void onTimeReminderClick(View view) {
-        //This variable will allow us to determine view's position and therefore the appropriate reminder for it
-        final LinearLayout layout = (LinearLayout) view.getParent();
-        final int viewPositionInList = reminderViews.indexOf(layout);
-        Reminder viewReminder = mPresenter.getReminder(viewPositionInList);
-
-        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                Log.d(TAG, "time: " + calendar.getTimeInMillis());
-                mPresenter.updateReminderTimeOfDay(viewPositionInList, calendar.getTimeInMillis());
-                reload(layout, mPresenter.getReminder(viewPositionInList));
-            }
-        };
-
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(viewReminder.timeOfDay);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                timeSetListener, c.get(Calendar.HOUR_OF_DAY),
-                c.get(Calendar.MINUTE), false);
-        timePickerDialog.show();
-    }
-
-    private void addReminder() {
-        Reminder reminder = new Reminder();
-        reminder.init();
-        mPresenter.addReminder(reminder);
-        addReminder(reminder);
-    }
-
-    private void reload(LinearLayout reminderView, Reminder reminder){
+    public void reload(LinearLayout reminderView, Reminder reminder){
 
         TextView timeText = reminderView.findViewById(R.id.text_time_of_day);
         TextView dayStates = reminderView.findViewById(R.id.text_day);
@@ -188,7 +132,8 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
                 reminderViews.remove(reminderView);
             } else {
                 StringBuilder sb = new StringBuilder();
-                for (String s : reminder.dayStates.keySet()) {
+                List<String> sortedDays = Util.sortDaysOfWeek(reminder.dayStates.keySet());
+                for (String s : sortedDays) {
                     if (reminder.dayStates.get(s)) {
                         sb.append(s + " ");
                     }
@@ -196,5 +141,35 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
                 dayStates.setText(sb.toString());
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDetach();
+    }
+
+    public void onDayReminderClick(final View view) {
+        mPresenter.onDayReminderClick(view, reminderViews);
+    }
+
+    public void onTimeReminderClick(View view) {
+        mPresenter.onTimeReminderClick(view, reminderViews);
+    }
+
+    private void addReminder() {
+        mPresenter.addReminder();
     }
 }
