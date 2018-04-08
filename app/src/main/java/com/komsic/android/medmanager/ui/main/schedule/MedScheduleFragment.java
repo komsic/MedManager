@@ -1,9 +1,9 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +11,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CalendarView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
-import com.komsic.android.medmanager.ui.base.MvpView;
-import com.komsic.android.medmanager.ui.main.list.MedListPresenter;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.Calendar;
@@ -82,7 +75,6 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
         mPresenter = new MedSchedulePresenter(DataManager.getInstance());
         mPresenter.onAttach(this);
         mPresenter.onViewPrepared();
-        //mPresenter.setListener(mDatabaseReference);
 
         return rootView;
     }

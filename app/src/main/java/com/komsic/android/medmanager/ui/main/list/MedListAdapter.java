@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
@@ -18,15 +20,19 @@ import java.util.ArrayList;
  * Created by komsic on 4/2/2018.
  */
 
-public class MedListAdapter extends
-        RecyclerView.Adapter<MedListAdapter.MedListViewHolder> {
+public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListViewHolder>
+        implements Filterable{
 
     private final Context mContext;
     private ArrayList<Med> mMedList;
+    private ArrayList<Med> filteredList;
+    private MedFilter mMedFilter;
 
     public MedListAdapter(Context context) {
         this.mContext = context;
         mMedList = new ArrayList<>();
+        filteredList = mMedList;
+
     }
 
     @Override
@@ -38,12 +44,17 @@ public class MedListAdapter extends
 
     @Override
     public void onBindViewHolder(MedListViewHolder holder, int position) {
-        final Med currentMed = mMedList.get(position);
+        final Med currentMed = filteredList.get(position);
+
         holder.textMedName.setText(currentMed.name);
+
         holder.textStartDate.setText(String.format("%s - %s",
-                mContext.getString(R.string.msg_start_date), CalendarUtil.getDateInString(currentMed.startDate)));
+                mContext.getString(R.string.msg_start_date),
+                CalendarUtil.getDateInString(currentMed.startDate)));
+
         holder.textEndDate.setText(String.format("%s - %s",
-                mContext.getString(R.string.msg_end_date), CalendarUtil.getDateInString(currentMed.endDate)));
+                mContext.getString(R.string.msg_end_date),
+                CalendarUtil.getDateInString(currentMed.endDate)));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,12 +68,23 @@ public class MedListAdapter extends
 
     @Override
     public int getItemCount() {
-        return mMedList.size();
+        return filteredList.size();
     }
 
     public void addMed(Med newMed) {
-        mMedList.add(newMed);
-        notifyItemInserted(mMedList.size() - 1);
+        if (!mMedList.contains(newMed)) {
+            mMedList.add(newMed);
+            filteredList = mMedList;
+            notifyItemInserted(filteredList.size() - 1);
+        }
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (mMedFilter == null) {
+            mMedFilter = new MedFilter();
+        }
+        return mMedFilter;
     }
 
     public class MedListViewHolder extends RecyclerView.ViewHolder {
@@ -75,6 +97,39 @@ public class MedListAdapter extends
             textMedName = itemView.findViewById(R.id.text_item_list_med_name);
             textStartDate = itemView.findViewById(R.id.text_start_date);
             textEndDate = itemView.findViewById(R.id.text_end_date);
+        }
+    }
+
+    public class MedFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            if (constraint != null && constraint.length() > 0) {
+                ArrayList<Med> tempList = new ArrayList<>();
+
+                for (Med med : mMedList) {
+                    if (med.name.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(med);
+                    }
+                }
+
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
+            } else {
+                filterResults.count = mMedList.size();
+                filterResults.values = mMedList;
+            }
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            //noinspection unchecked
+            filteredList = (ArrayList<Med>) results.values;
+
+            notifyDataSetChanged();
         }
     }
 }

@@ -1,12 +1,8 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import android.util.Log;
+
 import com.komsic.android.medmanager.data.DataManager;
-import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 
 /**
@@ -14,7 +10,7 @@ import com.komsic.android.medmanager.ui.base.BasePresenter;
  */
 
 public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePresenter<V>
-        implements MedScheduleMvpPresenter<V> {
+        implements MedScheduleMvpPresenter<V>, DataManager.MedEventListener {
 
 
     public MedSchedulePresenter(DataManager dataManager) {
@@ -23,40 +19,17 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
 
     @Override
     public void onViewPrepared() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("medList");
-        reference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Med med = dataSnapshot.getValue(Med.class);
-
-                getMvpView().updateList(med);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        getDataManager().setMedEventSchedule(this);
     }
 
-    public void setListener(String databaseRef) {
+    @Override
+    public void onMedAdded() {
+        getMvpView().updateList(getDataManager().getMed());
     }
 
-    public void removeListener(String databaseRef, int whichListener) {
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
     }
 }

@@ -3,6 +3,7 @@ package com.komsic.android.medmanager.ui.detail;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
@@ -24,13 +25,15 @@ import java.util.Calendar;
 public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         implements DetailMvpPresenter<V>, DataManager.MedEventListener {
 
+    private String databaseRef;
+
     public DetailPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
     @Override
     public void onViewPrepared(String ref) {
-
+        databaseRef = ref;
         getDataManager().addListenerForSingleValueEvent(ref, this);
     }
 
@@ -59,7 +62,7 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
 
     void onPause() {
         if (getDataManager().getMed() != null) {
-            //itemRef.updateChildren(getDataManager().getMed().toMap());
+            getDataManager().updateChildren("medList/" + databaseRef, getDataManager().getMed());
         }
     }
 

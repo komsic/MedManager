@@ -146,6 +146,7 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        mPresenter.onPause();
         finish();
     }
 
