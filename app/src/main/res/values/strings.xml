@@ -6,4 +6,5 @@
     <string name="days"><u>Daily</u></string>
     <string name="reminder_time"><u>8:00 am</u></string>
     <string name="action_search">Search med list</string>
+    <string name="action_sort">Sort</string>
 </resources>

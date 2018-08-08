@@ -8,15 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
@@ -69,8 +65,8 @@ public class MedListFragment extends BaseFragment implements
     }
 
     @Override
-    public void updateList(Med med) {
-        mAdapter.addMed(med);
+    public void updateList(List<Med> newMedList) {
+        mAdapter.addMedList(newMedList);
     }
 
     @Override
@@ -94,6 +90,17 @@ public class MedListFragment extends BaseFragment implements
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sort:
+                mAdapter.sortMedList();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

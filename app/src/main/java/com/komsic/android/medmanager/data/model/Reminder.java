@@ -3,6 +3,7 @@ package com.komsic.android.medmanager.data.model;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
+import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,8 +20,9 @@ import java.util.Set;
  */
 
 public class Reminder implements Comparable<Reminder>{
-    public long timeOfDay;
+    private long timeOfDay;
     public Map<String, Boolean> dayStates = new HashMap<>();
+
     @Exclude
     public String[] daysOfTheWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
@@ -28,7 +30,7 @@ public class Reminder implements Comparable<Reminder>{
     }
 
     public Reminder(long timeOfDay, Map<String, Boolean> dayStates) {
-        this.timeOfDay = timeOfDay;
+        this.timeOfDay = CalendarUtil.convertToTime(timeOfDay);
         this.dayStates = dayStates;
     }
 
@@ -39,7 +41,8 @@ public class Reminder implements Comparable<Reminder>{
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Reminder && timeOfDay == ((Reminder) obj).timeOfDay;
+        return obj instanceof Reminder && CalendarUtil.convertToTime(timeOfDay) ==
+                CalendarUtil.convertToTime(((Reminder) obj).timeOfDay);
     }
 
     @Override
@@ -49,9 +52,18 @@ public class Reminder implements Comparable<Reminder>{
 
     public void init() {
         timeOfDay = Calendar.getInstance().getTimeInMillis();
+        timeOfDay = CalendarUtil.convertToTime(timeOfDay);
         for (String s : daysOfTheWeek) {
             dayStates.put(s, true);
         }
+    }
+
+    public void setTimeOfDay(long timeOfDay) {
+        this.timeOfDay = CalendarUtil.convertToTime(timeOfDay);
+    }
+
+    public long getTimeOfDay() {
+        return timeOfDay;
     }
 
     @Exclude

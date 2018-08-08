@@ -12,6 +12,7 @@ import com.komsic.android.medmanager.ui.base.BasePresenter;
 public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePresenter<V>
         implements MedScheduleMvpPresenter<V>, DataManager.MedEventListener {
 
+    private long mSelectedDate;
 
     public MedSchedulePresenter(DataManager dataManager) {
         super(dataManager);
@@ -19,12 +20,21 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
 
     @Override
     public void onViewPrepared() {
+        //getMvpView().updateList(getDataManager().getMed());
+
         getDataManager().setMedEventSchedule(this);
     }
 
     @Override
+    public void onDateSelected(long selectedDate) {
+        mSelectedDate = selectedDate;
+        getMvpView().updateList(getDataManager().processSchedule(mSelectedDate));
+    }
+
+    @Override
     public void onMedAdded() {
-        getMvpView().updateList(getDataManager().getMed());
+        //getMvpView().updateList(getDataManager().getMed());
+        getMvpView().updateList(getDataManager().processSchedule(mSelectedDate));
     }
 
     @Override

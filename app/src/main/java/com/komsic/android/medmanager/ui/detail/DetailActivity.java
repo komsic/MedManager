@@ -104,7 +104,7 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
     @Override
     public void addReminder(Reminder rem) {
         mReminderView = getLayoutInflater().inflate(R.layout.item_reminder, null);
-
+        rem.setTimeOfDay(rem.getTimeOfDay());
         reload((LinearLayout) mReminderView, rem);
         LinearLayout l = findViewById(R.id.linear_layout_reminder);
         l.addView(mReminderView);
@@ -123,7 +123,7 @@ public class DetailActivity extends BaseActivity implements DetailMvpView {
         TextView dayStates = reminderView.findViewById(R.id.text_day);
 
         if (reminder != null) {
-            timeText.setText(CalendarUtil.getTimeInString(reminder.timeOfDay));
+            timeText.setText(CalendarUtil.getTimeInString(reminder.getTimeOfDay()));
             if (!reminder.dayStates.containsValue(false)) {
                 dayStates.setText("Daily");
             } else if (!reminder.dayStates.containsValue(true)) {

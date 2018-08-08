@@ -10,5 +10,5 @@ import java.util.List;
  */
 
 public interface MedListMvpView extends MvpView {
-    void updateList(Med med);
+    void updateList(List<Med> newMedList);
 }

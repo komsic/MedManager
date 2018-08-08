@@ -32,6 +32,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
+        <service
+            android:name=".data.sync.SyncAlarmService"
+            android:exported="false"/>
+        <receiver
+            android:name=".util.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.komsic.android.med_manager.ACTION_NOTIFY"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

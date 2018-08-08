@@ -9,4 +9,6 @@ import com.komsic.android.medmanager.ui.base.MvpPresenter;
 public interface MedScheduleMvpPresenter<V extends MedScheduleMvpView> extends MvpPresenter<V> {
 
     void onViewPrepared();
+
+    void onDateSelected(long selectedDate);
 }

@@ -1,22 +1,36 @@
 package com.komsic.android.medmanager.data;
 
+import android.util.Log;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.data.model.Med;
+import com.komsic.android.medmanager.data.model.Reminder;
+import com.komsic.android.medmanager.util.CalendarUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static android.R.attr.data;
 
 /**
  * Created by komsic on 4/2/2018.
- * This clase is reponsible for storing data
+ * This class is responsible for storing data
  */
 
 public class DataManager implements ValueEventListener, ChildEventListener {
+    private static final String TAG = "DataManager";
+
     public static final int VALUE_EVENT_LISTENER = 1;
     public static final int CHILD_EVENT_LISTENER = 2;
 
@@ -26,6 +40,10 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     private Map<String, Boolean> mDayStateMap;
 
+    private List<Med> mMedList;
+    private Set<Alarm> mAlarmList;
+    private int mAlarmListSize;
+
     private Med mMed;
 
     private DatabaseReference mDatabaseReference;
@@ -33,6 +51,7 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     private MedEventListener mMedEventListener;
     private MedEventListener scheduleMedEventListener;
+    private AlarmEventListener mAlarmEventListener;
 
 
     public static DataManager getInstance() {
@@ -43,6 +62,8 @@ public class DataManager implements ValueEventListener, ChildEventListener {
     }
 
     private DataManager() {
+        mMedList = new ArrayList<>();
+        mAlarmList = new HashSet<>();
         mDayStateMap = new HashMap<>();
 
         for (String dayState : daysOfTheWeek) {
@@ -68,7 +89,6 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     public void setMed(Med med) {
         mMed = med;
-
     }
 
     @Override
@@ -81,6 +101,12 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        if (dataSnapshot != null) {
+            Med med = dataSnapshot.getValue(Med.class);
+            mMedList.add(med);
+            mMedEventListener.onMedAdded();
+            scheduleMedEventListener.onMedAdded();
+        }
         if (dataSnapshot != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mMedEventListener.onMedAdded();
@@ -122,6 +148,10 @@ public class DataManager implements ValueEventListener, ChildEventListener {
         mDatabaseReference.addListenerForSingleValueEvent(this);
     }
 
+    public void setAlarmEventListener(AlarmEventListener alarmEventListener) {
+        mAlarmEventListener = alarmEventListener;
+    }
+
     public void removeListener(int whichListener) {
         switch (whichListener) {
             case VALUE_EVENT_LISTENER:
@@ -137,7 +167,65 @@ public class DataManager implements ValueEventListener, ChildEventListener {
         mDatabaseReference.updateChildren(med.toMap());
     }
 
+    public List<Med> getMedList() {
+        return mMedList;
+    }
+
+    public List<Map<Reminder, Set<String>>> processSchedule(long selectedDate) {
+        Map<Reminder, Set<String>> data = new HashMap<>();
+
+        for (Med med : mMedList) {
+            for (Reminder reminder : med.reminders) {
+                if (selectedDate >= med.startDate && selectedDate <= med.endDate) {
+                    if (reminder.getDateDayState(selectedDate)) {
+                        if (!data.containsKey(reminder)) {
+                            data.put(reminder, new HashSet<String>());
+                        }
+                        data.get(reminder).add(med.name);
+                    }
+                }
+            }
+        }
+
+        List<Map<Reminder, Set<String>>> dataList = new ArrayList<>();
+        List<Reminder> sortedKeySet = new ArrayList<>(data.keySet());
+        Collections.sort(sortedKeySet);
+        dataList.clear();
+        for (Reminder reminder : sortedKeySet) {
+            Map<Reminder, Set<String>> dataMap = new HashMap<>();
+            dataMap.put(reminder, data.get(reminder));
+            dataList.add(dataMap);
+            Alarm newAlarm = new Alarm(reminder.getTimeOfDay(), dataMap.get(reminder));
+            processAlarm(selectedDate, newAlarm);
+        }
+
+        if (mAlarmEventListener != null) {
+            Log.e(TAG, "processSchedule: " );
+            mAlarmEventListener.onAlarmChanged();
+        }
+
+        return dataList;
+    }
+
+    public void processAlarm(long selectedDate, Alarm alarm) {
+        long currentTime = CalendarUtil.getCurrentTime();
+        if (CalendarUtil.getDateInString(currentTime)
+                .equals(CalendarUtil.getDateInString(selectedDate))) {
+            if (mAlarmList != null) {
+                mAlarmList.add(alarm);
+            }
+        }
+    }
+
+    public Set<Alarm> getAlarmList() {
+        return mAlarmList;
+    }
+
     public interface MedEventListener{
         void onMedAdded();
+    }
+
+    public interface AlarmEventListener{
+        void onAlarmChanged();
     }
 }

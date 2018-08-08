@@ -126,7 +126,7 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         };
 
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(viewReminder.timeOfDay);
+        c.setTimeInMillis(viewReminder.getTimeOfDay());
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),
                 timeSetListener, c.get(Calendar.HOUR_OF_DAY),

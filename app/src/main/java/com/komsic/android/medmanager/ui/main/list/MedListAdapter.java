@@ -16,6 +16,9 @@ import com.komsic.android.medmanager.ui.detail.DetailActivity;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by komsic on 4/2/2018.
  */
@@ -71,12 +74,24 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
         return filteredList.size();
     }
 
-    public void addMed(Med newMed) {
-        if (!mMedList.contains(newMed)) {
-            mMedList.add(newMed);
+    public void addMedList(List<Med> newMedList) {
+        if (newMedList != null) {
+            mMedList.clear();
+            mMedList.addAll(newMedList);
             filteredList = mMedList;
             notifyItemInserted(filteredList.size() - 1);
         }
+//        if (!mMedList.contains(newMed)) {
+//            mMedList.add(newMed);
+//            filteredList = mMedList;
+//            notifyItemInserted(filteredList.size() - 1);
+//        }
+    }
+
+    public void sortMedList() {
+        Collections.sort(filteredList);
+        Collections.sort(mMedList);
+        notifyDataSetChanged();
     }
 
     @Override

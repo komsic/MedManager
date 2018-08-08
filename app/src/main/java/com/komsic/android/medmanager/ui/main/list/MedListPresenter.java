@@ -17,6 +17,9 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
     @Override
     public void onViewPrepared() {
         getDataManager().setMedEventList(this);
+        if (getDataManager().getMedList().size() > 0 && getDataManager().getMedList() != null) {
+            getMvpView().updateList(getDataManager().getMedList());
+        }
     }
 
     @Override
@@ -27,8 +30,8 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
 
     @Override
     public void onMedAdded() {
-        if (getDataManager().getMed() != null) {
-            getMvpView().updateList(getDataManager().getMed());
+        if (getDataManager().getMedList() != null) {
+            getMvpView().updateList(getDataManager().getMedList());
         }
     }
 }

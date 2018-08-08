@@ -1,5 +1,6 @@
 package com.komsic.android.medmanager.ui.main;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,10 +13,13 @@ import android.view.View;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
 import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
+
+import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NOTIFY;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -78,5 +82,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mPresenter.openAddMedDialog(getSupportFragmentManager());
             }
         });
+
+        Intent startSyncServiceIntent = new Intent(this, SyncAlarmService.class);
+        startSyncServiceIntent.setAction(ACTION_NOTIFY);
+        startService(startSyncServiceIntent);
     }
 }

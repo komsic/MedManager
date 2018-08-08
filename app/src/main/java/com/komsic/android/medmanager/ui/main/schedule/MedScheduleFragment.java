@@ -15,13 +15,14 @@ import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.data.model.Med;
+import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.Calendar;
-
-import static com.komsic.android.medmanager.util.CalendarUtil.getDateInString;
-import static com.komsic.android.medmanager.util.CalendarUtil.parseDateFromString;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by komsic on 4/2/2018.
@@ -35,7 +36,6 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     String selectedDate;
     MedScheduleAdapter adapter;
     MedSchedulePresenter mPresenter;
-    public static final String ACTION_NOTIFY = "com.komsic.android.med_manager.ACTION_NOTIFY";
 
     public static MedScheduleFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,25 +56,30 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
         onScrollListener = new StubScrollListener();
         mRecyclerView.addOnScrollListener(onScrollListener);
 
-        adapter = new MedScheduleAdapter(getContext(),
-                parseDateFromString(selectedDate).getTime());
+        adapter = new MedScheduleAdapter(getContext());
         mRecyclerView.setAdapter(adapter);
+
+        mPresenter = new MedSchedulePresenter(DataManager.getInstance());
+        mPresenter.onAttach(this);
+        mPresenter.onViewPrepared();
+        mPresenter.onDateSelected(CalendarUtil.parseDateFromString(selectedDate).getTime());
 
         animationDown = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.expand);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+
                 Calendar c = Calendar.getInstance();
                 c.set(year, month, dayOfMonth);
-                selectedDate = getDateInString(c.getTimeInMillis());
+                selectedDate = CalendarUtil.getDateInString(c.getTimeInMillis());
+
                 getActivity().setTitle(selectedDate);
-                adapter.setDate(parseDateFromString(selectedDate));
+
+                mPresenter.onDateSelected(CalendarUtil.parseDateFromString(selectedDate).getTime());
             }
         });
-        mPresenter = new MedSchedulePresenter(DataManager.getInstance());
-        mPresenter.onAttach(this);
-        mPresenter.onViewPrepared();
+
 
         return rootView;
     }
@@ -92,8 +97,9 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     }
 
     @Override
-    public void updateList(Med med) {
-        adapter.addMed(med);
+    public void updateList(List<Map<Reminder, Set<String>>> medDataList) {
+        //adapter.addMed(med);
+        adapter.addScheduleList(medDataList);
     }
 
     @Override

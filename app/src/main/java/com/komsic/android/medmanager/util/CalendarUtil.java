@@ -34,4 +34,20 @@ public class CalendarUtil {
         }
         throw new UnsupportedOperationException();
     }
+
+    public static long convertToTime(long time) {
+        long i = 0;
+        try {
+            i = DateFormat.getTimeInstance(DateFormat.SHORT).parse(
+                    DateFormat.getTimeInstance(DateFormat.SHORT).format(time)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //throw new UnsupportedOperationException();
+        return i;
+    }
+
+    public static long getCurrentTimeInTimeInstanceForm() {
+        return convertToTime(Calendar.getInstance().getTimeInMillis());
+    }
 }
