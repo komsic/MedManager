@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.komsic.android.medmanager.R;
@@ -34,12 +35,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         tabLayout = findViewById(R.id.tab_layout);
         medPager = findViewById(R.id.main_view_pager);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mPresenter = new MainPresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
 
         setUp();
-
     }
 
     @Override

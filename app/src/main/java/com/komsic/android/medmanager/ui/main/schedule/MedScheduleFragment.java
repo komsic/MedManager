@@ -30,7 +30,6 @@ import java.util.Set;
 
 public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvpView{
     RecyclerView mRecyclerView;
-    StubScrollListener onScrollListener;
     CalendarView mCalendarView;
     Animation animationDown;
     String selectedDate;
@@ -53,8 +52,6 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
 
         selectedDate = CalendarUtil.getDateInString(mCalendarView.getDate());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        onScrollListener = new StubScrollListener();
-        mRecyclerView.addOnScrollListener(onScrollListener);
 
         adapter = new MedScheduleAdapter(getContext());
         mRecyclerView.setAdapter(adapter);
@@ -105,46 +102,5 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     @Override
     public void addAlarm(Alarm alarm) {
 
-    }
-
-    class StubScrollListener extends RecyclerView.OnScrollListener {
-        @Override
-        public final void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            if (!recyclerView.canScrollVertically(-1)) {
-                onScrolledToTop();
-            } else if (!recyclerView.canScrollVertically(1)) {
-                onScrolledToBottom();
-            }
-            if (dy < 0) {
-                onScrolledUp();
-            } else if (dy > 0) {
-                onScrolledDown();
-            }
-        }
-
-        void onScrolledUp() {
-
-        }
-
-        void onScrolledDown() {
-            if (mCalendarView.getVisibility() == View.GONE) {
-                return;
-            }
-
-            if (mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_SETTLING) {
-                mCalendarView.setVisibility(View.GONE);
-                //mCalendarView.startAnimation(animationDown);
-            }
-        }
-
-        void onScrolledToTop() {
-            if (mCalendarView.getVisibility() == View.VISIBLE) {
-                return;
-            }
-
-            mCalendarView.setVisibility(View.VISIBLE);
-        }
-
-        void onScrolledToBottom() {}
     }
 }
