@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.komsic.android.medmanager.ui.login.new_user.NewUserFragment">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/email_text_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_new_user">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/email_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/e_mail"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/display_name_text_input"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/email_text_input"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/email_text_input"
+        app:layout_constraintTop_toBottomOf="@+id/email_text_input">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/display_name_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/display_name"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/password_text_input"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/display_name_text_input"
+        app:layout_constraintStart_toStartOf="@+id/display_name_text_input"
+        app:layout_constraintTop_toBottomOf="@+id/display_name_text_input">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/confirm_password_text_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/password_text_input"
+        app:layout_constraintStart_toStartOf="@+id/password_text_input"
+        app:layout_constraintTop_toBottomOf="@+id/password_text_input">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/confirm_password_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/confirm_password"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/text_new_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/new_user"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.157" />
+
+    <TextView
+        android:id="@+id/text_sign_up"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/button_sign_up"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="8dp"
+        android:text="@string/sign_up"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_password_text_input" />
+
+
+</android.support.constraint.ConstraintLayout>

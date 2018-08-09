@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.komsic.android.medmanager.ui.login.sign_in.SignInFragment">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/password_text_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_text_input">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.164"
+        app:srcCompat="@drawable/ic_med_manager_logo" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/email_text_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/email_text_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/e_mail"
+            android:textColor="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/text_login"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="@string/login"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/password_text_input"
+        app:layout_constraintStart_toStartOf="@+id/password_text_input"
+        app:layout_constraintTop_toBottomOf="@+id/password_text_input" />
+
+    <TextView
+        android:id="@+id/text_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/forgot_your_password"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@android:color/white"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/text_login"
+        app:layout_constraintStart_toStartOf="@+id/text_login"
+        app:layout_constraintTop_toBottomOf="@+id/text_login" />
+</android.support.constraint.ConstraintLayout>

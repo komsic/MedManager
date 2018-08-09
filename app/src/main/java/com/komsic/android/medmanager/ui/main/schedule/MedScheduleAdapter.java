@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,9 +32,12 @@ class MedScheduleAdapter extends
 
     private final Context context;
     private List<Map<Reminder, Set<String>>> dataList;
+    private List<Map<Reminder, Set<String>>> mockdataList;
+
     MedScheduleAdapter(Context context) {
         this.context = context;
         dataList = new ArrayList<>();
+        mockdataList = mock();
     }
 
     @NonNull
@@ -44,9 +48,54 @@ class MedScheduleAdapter extends
                 .inflate(R.layout.item_med_schedule, parent, false));
     }
 
+    List<Map<Reminder, Set<String>>> mock() {
+        List<Map<Reminder, Set<String>>> data = new ArrayList<>();
+
+        Map<Reminder, Set<String>> d = new HashMap<>();
+
+        Map<String, Boolean> dayStates = new HashMap<>();
+        dayStates.put("sun", true);
+        dayStates.put("mon", true);
+        dayStates.put("tue", true);
+        dayStates.put("wed", true);
+        dayStates.put("thu", true);
+        dayStates.put("fri", true);
+        dayStates.put("sat", true);
+
+        Set<String> med = new HashSet<>();
+        med.add("Norflor TZ");
+        med.add("Vitamin C");
+        med.add("Diet Pill");
+        med.add("Vitamins");
+        med.add("Fiber Active");
+
+        Reminder reminder1 = new Reminder(calc(10), dayStates);
+        d.put(reminder1, med);
+        data.add(d);
+        d.clear();
+
+        Reminder reminder2 = new Reminder(calc(13), dayStates);
+        d.put(reminder2, med);
+        data.add(d);
+        d.clear();
+
+        Reminder reminder3 = new Reminder(calc(18), dayStates);
+        d.put(reminder3, med);
+        data.add(d);
+        d.clear();
+
+        return data;
+    }
+
+    long calc(int time) {
+        return time * 3600000;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MedScheduleViewHolder holder, int position) {
         Map<Reminder, Set<String>> currentMapData = dataList.get(position);
+
+//        Map<Reminder, Set<String>> currentMapData = mockdataList.get(position);
         Reminder currentReminder = getReminderFromMapData(currentMapData);
 
         holder.textTimeOfDay.setText(CalendarUtil.getTimeInString(currentReminder.getTimeOfDay()));
@@ -75,36 +124,6 @@ class MedScheduleAdapter extends
         return null;
     }
 
-    void makeToast(Object s) {
-        Toast.makeText(context, String.valueOf(s), Toast.LENGTH_SHORT).show();
-    }
-
-    void init() {
-
-
-//        long currentTime = CalendarUtil.getCurrentTime();
-//        if (CalendarUtil.getDateInString(currentTime).equals(CalendarUtil.getDateInString(mSelectedDate))) {
-//            Intent alarmIntent = new Intent(ACTION_NOTIFY);
-//            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//            for (int i = 0; i < dataList.size(); i++) {
-//                Map<Reminder, Set<String>> currentMapData = dataList.get(i);
-//                Reminder currentReminder = getReminderFromMapData(currentMapData);
-//                ArrayList<String> medNames = new ArrayList<>(currentMapData.get(currentReminder));
-//                alarmIntent.putStringArrayListExtra("medNames", medNames);
-//
-//                ArrayList<PendingIntent> pendingIntents = new ArrayList<>();
-//                for (int count = 0; count < dataList.size(); count++) {
-//                    pendingIntents.add(PendingIntent.getBroadcast(context, count, alarmIntent,
-// PendingIntent.FLAG_UPDATE_CURRENT));
-//                }
-//
-//                for (PendingIntent pendingIntent : pendingIntents) {
-//                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, getTimeInMili(currentReminder.timeOfDay), pendingIntent);
-//                }
-//            }
-//        }
-    }
-
     class MedScheduleViewHolder extends RecyclerView.ViewHolder {
         TextView textTimeOfDay;
         LinearLayout scheduleLayout;
@@ -130,7 +149,6 @@ class MedScheduleAdapter extends
                 View view = addViewToSchedule(s);
                 scheduleLayout.addView(view);
             }
-
         }
     }
 }

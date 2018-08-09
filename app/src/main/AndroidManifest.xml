@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.komsic.android.medmanager">
+    package="com.komsic.android.medmanager">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".MedManagerApp"
@@ -10,39 +15,50 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.MainActivity"
-                  android:launchMode="singleTop"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.SEARCH"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".ui.detail.DetailActivity"
-                  android:launchMode="singleTop"
-                  android:parentActivityName=".ui.main.MainActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.detail.DetailActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
+
         <service
             android:name=".data.sync.SyncAlarmService"
-            android:exported="false"/>
+            android:exported="false" />
+
         <receiver
             android:name=".util.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.komsic.android.med_manager.ACTION_NOTIFY"/>
+                <action android:name="com.komsic.android.med_manager.ACTION_NOTIFY" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity android:name=".ui.splash.SplashActivity"></activity>
     </application>
 
 </manifest>
