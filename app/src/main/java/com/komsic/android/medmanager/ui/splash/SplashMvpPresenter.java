@@ -1,4 +1,7 @@
 package com.komsic.android.medmanager.ui.splash;
 
-public interface SplashMvpPresenter {
+import com.komsic.android.medmanager.ui.base.MvpPresenter;
+
+public interface SplashMvpPresenter<V extends SplashMvpView> extends MvpPresenter {
+
 }

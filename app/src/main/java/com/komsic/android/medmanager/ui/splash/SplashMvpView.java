@@ -1,4 +1,12 @@
 package com.komsic.android.medmanager.ui.splash;
 
-public interface SplashMvpView {
+import com.komsic.android.medmanager.ui.base.MvpView;
+
+public interface SplashMvpView extends MvpView {
+
+    void openLoginActivity(int whichFragment);
+
+    void openMainActivity();
+
+    void toastMessage(String msg);
 }

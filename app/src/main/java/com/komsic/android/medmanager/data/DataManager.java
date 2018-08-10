@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static android.R.attr.data;
-
 /**
  * Created by komsic on 4/2/2018.
  * This class is responsible for storing data
@@ -93,7 +91,7 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        if (dataSnapshot != null) {
+        if (dataSnapshot != null && mMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mMedEventListener.onMedAdded();
         }
@@ -101,14 +99,9 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        if (dataSnapshot != null) {
-            Med med = dataSnapshot.getValue(Med.class);
-            mMedList.add(med);
-            mMedEventListener.onMedAdded();
-            scheduleMedEventListener.onMedAdded();
-        }
-        if (dataSnapshot != null) {
+        if (dataSnapshot != null && mMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
+            mMedList.add(mMed);
             mMedEventListener.onMedAdded();
             scheduleMedEventListener.onMedAdded();
         }

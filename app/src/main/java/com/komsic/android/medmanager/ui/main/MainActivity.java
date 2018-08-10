@@ -1,5 +1,6 @@
 package com.komsic.android.medmanager.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +18,6 @@ import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
 import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
-import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
 import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NOTIFY;
 
@@ -41,6 +41,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
 
         setUp();
+    }
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, MainActivity.class);
     }
 
     @Override
@@ -80,9 +84,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         fabNewMed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mPresenter.openAddMedDialog(getSupportFragmentManager());
-                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-                startActivity(intent);
+                mPresenter.openAddMedDialog(getSupportFragmentManager());
+//                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+//                startActivity(intent);
             }
         });
 
