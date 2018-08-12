@@ -10,6 +10,8 @@ import com.komsic.android.medmanager.ui.base.BasePresenter;
 public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
         implements MedListMvpPresenter<V>, DataManager.MedEventListener{
 
+    private static final String TAG = "MedListPresenter";
+
     public MedListPresenter(DataManager dataManager){
         super(dataManager);
     }
@@ -17,14 +19,12 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
     @Override
     public void onViewPrepared() {
         getDataManager().setMedEventList(this);
-        if (getDataManager().getMedList().size() > 0 && getDataManager().getMedList() != null) {
-            getMvpView().updateList(getDataManager().getMedList());
-        }
     }
 
     @Override
     public void onDetach() {
         getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
+        getDataManager().clearMedList();
         super.onDetach();
     }
 

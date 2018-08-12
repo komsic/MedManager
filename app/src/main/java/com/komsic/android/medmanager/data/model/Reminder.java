@@ -6,11 +6,9 @@ import com.google.firebase.database.Exclude;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +17,7 @@ import java.util.Set;
  * Created by komsic on 4/13/2018.
  */
 
-public class Reminder implements Comparable<Reminder>{
+public class Reminder implements Comparable<Reminder> {
     private long timeOfDay;
     public Map<String, Boolean> dayStates = new HashMap<>();
 

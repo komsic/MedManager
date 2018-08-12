@@ -27,6 +27,7 @@ import java.util.List;
 public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListViewHolder>
         implements Filterable{
 
+    private static final String TAG = "MedListAdapter";
     private final Context mContext;
     private ArrayList<Med> mMedList;
     private ArrayList<Med> filteredList;
@@ -36,12 +37,11 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
         this.mContext = context;
         mMedList = new ArrayList<>();
         filteredList = mMedList;
-
     }
 
     @NonNull
     @Override
-    public MedListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MedListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MedListViewHolder(LayoutInflater
                 .from(mContext)
                 .inflate(R.layout.item_med_list, parent, false));
@@ -69,6 +69,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
                 mContext.startActivity(intent);
             }
         });
+
     }
 
     @Override

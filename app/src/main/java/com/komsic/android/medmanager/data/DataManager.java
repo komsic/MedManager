@@ -19,7 +19,6 @@ import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.data.model.User;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
-import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private Map<String, Boolean> mDayStateMap;
 
     private List<Med> mMedList;
-    private Set<Alarm> mAlarmList;
     private int mAlarmListSize;
 
     private Med mMed;
@@ -59,8 +57,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     private MedEventListener mMedEventListener;
     private MedEventListener scheduleMedEventListener;
-    private AlarmEventListener mAlarmEventListener;
-
 
     public static DataManager getInstance() {
         if (sDataManager == null) {
@@ -71,14 +67,13 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     private DataManager() {
         mMedList = new ArrayList<>();
-        mAlarmList = new HashSet<>();
         mDayStateMap = new HashMap<>();
 
         for (String dayState : daysOfTheWeek) {
             mDayStateMap.put(dayState, true);
         }
 
-        mMed = new  Med();
+        mMed = new Med();
 
         FirebaseAuth.getInstance().addAuthStateListener(this);
     }
@@ -152,17 +147,16 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mDatabaseReference.addListenerForSingleValueEvent(this);
     }
 
-    public void setAlarmEventListener(AlarmEventListener alarmEventListener) {
-        mAlarmEventListener = alarmEventListener;
-    }
-
     public void removeListener(int whichListener) {
-        switch (whichListener) {
-            case VALUE_EVENT_LISTENER:
-                mDatabaseReference.removeEventListener((ValueEventListener) this);
-                break;
-            case CHILD_EVENT_LISTENER:
-                mChildDatabaseReference.removeEventListener((ChildEventListener) this);
+        if (sDataManager != null) {
+            switch (whichListener) {
+                case VALUE_EVENT_LISTENER:
+                    mDatabaseReference.removeEventListener((ValueEventListener) this);
+                    break;
+                case CHILD_EVENT_LISTENER:
+                    mChildDatabaseReference.removeEventListener((ChildEventListener) this);
+                    break;
+            }
         }
     }
 
@@ -201,28 +195,9 @@ public class DataManager implements ValueEventListener, ChildEventListener,
             dataMap.put(reminder, data.get(reminder));
             dataList.add(dataMap);
             Alarm newAlarm = new Alarm(reminder.getTimeOfDay(), dataMap.get(reminder));
-            processAlarm(selectedDate, newAlarm);
-        }
-
-        if (mAlarmEventListener != null) {
-            mAlarmEventListener.onAlarmChanged();
         }
 
         return dataList;
-    }
-
-    public void processAlarm(long selectedDate, Alarm alarm) {
-        long currentTime = CalendarUtil.getCurrentTime();
-        if (CalendarUtil.getDateInString(currentTime)
-                .equals(CalendarUtil.getDateInString(selectedDate))) {
-            if (mAlarmList != null) {
-                mAlarmList.add(alarm);
-            }
-        }
-    }
-
-    public Set<Alarm> getAlarmList() {
-        return mAlarmList;
     }
 
     public void storeUser(String fullName, String username) {
@@ -321,19 +296,17 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            sDataManager = new DataManager();
-        } else {
+        if (user == null) {
             sDataManager = null;
             firebaseAuth.removeAuthStateListener(this);
         }
     }
 
-    public interface MedEventListener{
-        void onMedAdded();
+    public void clearMedList() {
+        mMedList.clear();
     }
 
-    public interface AlarmEventListener{
-        void onAlarmChanged();
+    public interface MedEventListener{
+        void onMedAdded();
     }
 }

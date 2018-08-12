@@ -32,6 +32,9 @@ import static android.content.Context.SEARCH_SERVICE;
 public class MedListFragment extends BaseFragment implements
         MedListMvpView {
 
+    private static final String TAG = "MedListFragment";
+    int i;
+
     private MedListAdapter mAdapter;
     private MedListMvpPresenter<MedListMvpView> mPresenter;
 
@@ -103,6 +106,7 @@ public class MedListFragment extends BaseFragment implements
 //                mAdapter.sortMedList();
                 FirebaseAuth.getInstance().signOut();
                 getBaseActivity().startActivity(SplashActivity.getStartIntent(getBaseActivity()));
+                getBaseActivity().finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

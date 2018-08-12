@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +20,7 @@ import java.util.Set;
  * This class will help to save alarm on Firebase Database
  */
 
-public class SyncAlarmService extends IntentService implements DataManager.AlarmEventListener {
+public class SyncAlarmService extends IntentService {
     private static final String TAG = "SyncAlarmService";
 
     private Set<Alarm> mAlarmList;
@@ -31,13 +29,11 @@ public class SyncAlarmService extends IntentService implements DataManager.Alarm
 
     public SyncAlarmService() {
         super("SyncAlarmService");
-        mAlarmList = DataManager.getInstance().getAlarmList();
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (ACTION_NOTIFY.equals(intent.getAction())) {
-            DataManager.getInstance().setAlarmEventListener(this);
 
 //            mAlarmList = new ArrayList<>();
 //
@@ -51,7 +47,6 @@ public class SyncAlarmService extends IntentService implements DataManager.Alarm
         }
     }
 
-    @Override
     public void onAlarmChanged() {
         if (mAlarmList != null) {
 
