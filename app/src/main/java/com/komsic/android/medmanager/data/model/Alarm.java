@@ -4,7 +4,6 @@ import com.google.firebase.database.Exclude;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

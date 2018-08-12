@@ -7,6 +7,4 @@ public interface SplashMvpView extends MvpView {
     void openLoginActivity(int whichFragment);
 
     void openMainActivity();
-
-    void toastMessage(String msg);
 }

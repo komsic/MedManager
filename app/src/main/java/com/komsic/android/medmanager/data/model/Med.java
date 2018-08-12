@@ -2,7 +2,6 @@ package com.komsic.android.medmanager.data.model;
 
 import android.support.annotation.NonNull;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ public class Med implements Comparable<Med>{
         return (int) startDate;
     }
 
-    // [START post_to_map]
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -57,7 +55,6 @@ public class Med implements Comparable<Med>{
 
         return result;
     }
-    // [END post_to_map]
 
     @Exclude
     public void addReminder(Reminder newReminder) {

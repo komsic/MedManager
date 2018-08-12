@@ -2,23 +2,19 @@ package com.komsic.android.medmanager.ui.main.add_med;
 
 import android.content.Intent;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 import com.komsic.android.medmanager.ui.detail.DetailActivity;
-
-import java.util.Calendar;
 
 /**
  * Created by komsic on 4/3/2018.
  */
 
 public class AddMedDialogPresenter<V extends AddMedDialogMvpView> extends BasePresenter<V>
-        implements AddMedDialogMvpPresenter{
+        implements AddMedDialogMvpPresenter<V> {
 
-    public AddMedDialogPresenter(DataManager dataManager) {
+    AddMedDialogPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -40,9 +36,7 @@ public class AddMedDialogPresenter<V extends AddMedDialogMvpView> extends BasePr
         newMed.startDate = startTime;
         newMed.endDate = endTime;
 
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        newMed.id = databaseRef.child("medList").push().getKey();
-        databaseRef.child("medList" + "/" + newMed.id).setValue(newMed);
+        getDataManager().addMed(newMed);
 
         Intent intent = new Intent(getMvpView().getContext(), DetailActivity.class);
         intent.putExtra("key", newMed.id);

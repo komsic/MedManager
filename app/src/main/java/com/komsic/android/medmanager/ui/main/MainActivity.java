@@ -10,14 +10,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
+import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
 import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
+import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
 import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NOTIFY;
 
@@ -84,14 +88,41 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         fabNewMed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.openAddMedDialog(getSupportFragmentManager());
-//                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-//                startActivity(intent);
+                mPresenter.openAddMedDialog();
             }
         });
 
         Intent startSyncServiceIntent = new Intent(this, SyncAlarmService.class);
         startSyncServiceIntent.setAction(ACTION_NOTIFY);
         startService(startSyncServiceIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_sign_out) {
+            mPresenter.signOut();
+            startActivity(SplashActivity.getStartIntent(this));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
+    }
+
+    @Override
+    public void openAddMedDialog() {
+        AddMedDialog dialogAddMed = new AddMedDialog();
+        dialogAddMed.show(getSupportFragmentManager(), "DialogAddMed");
     }
 }

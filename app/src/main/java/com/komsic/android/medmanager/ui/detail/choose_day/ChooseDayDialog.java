@@ -109,4 +109,10 @@ public class ChooseDayDialog extends BaseDialog implements ChooseDayDialogMvpVie
         init(dayStateMap, sunTextView, monTextView, tueTextView, wedTextView, thuTextView,
                 friTextView, satTextView);
     }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDetach();
+        super.onDestroyView();
+    }
 }

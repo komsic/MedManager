@@ -1,7 +1,5 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
-import com.komsic.android.medmanager.data.model.Alarm;
-import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.ui.base.MvpView;
 
@@ -14,7 +12,6 @@ import java.util.Set;
  */
 
 public interface MedScheduleMvpView extends MvpView {
-    void updateList(List<Map<Reminder, Set<String>>> med);
 
-    void addAlarm(Alarm alarm);
+    void updateList(List<Map<Reminder, Set<String>>> med);
 }

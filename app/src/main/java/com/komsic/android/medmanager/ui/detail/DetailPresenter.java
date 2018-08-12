@@ -3,7 +3,6 @@ package com.komsic.android.medmanager.ui.detail;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
@@ -27,7 +26,7 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
 
     private String databaseRef;
 
-    public DetailPresenter(DataManager dataManager) {
+    DetailPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -53,38 +52,20 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         }
     }
 
-    void addReminder() {
-        Reminder reminder = new Reminder();
-        reminder.init();
-        getDataManager().getMed().addReminder(reminder);
-        getMvpView().addReminder(reminder);
+    @Override
+    public void removeReminderDayState(Reminder reminder) {
+        getDataManager().getMed().removeReminderDayState(reminder);
     }
 
-    void onPause() {
+    @Override
+    public void onPause() {
         if (getDataManager().getMed() != null) {
-            getDataManager().updateChildren("medList/" + databaseRef, getDataManager().getMed());
+            getDataManager().updateChildren(databaseRef, getDataManager().getMed());
         }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        getDataManager().removeListener(DataManager.VALUE_EVENT_LISTENER);
-    }
-
-    Reminder getReminder(int viewPositionInList) {
-        return getDataManager().getMed().reminders.get(viewPositionInList);
-    }
-
-    void updateReminderTimeOfDay(int viewPositionInList, long time) {
-        getDataManager().getMed().updateReminderTimeOfDay(viewPositionInList, time);
-    }
-
-    void removeReminderDayState(Reminder reminder) {
-        getDataManager().getMed().removeReminderDayState(reminder);
-    }
-
-    void onDayReminderClick(View view, ArrayList<View> reminderViews) {
+    public void onDayReminderClick(View view, ArrayList<View> reminderViews) {
         // This variable will allow us to determine view's position and therefore the appropriate
         // reminder for it
         final LinearLayout layout = (LinearLayout) view.getParent();
@@ -107,6 +88,11 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         });
     }
 
+    private Reminder getReminder(int viewPositionInList) {
+        return getDataManager().getMed().reminders.get(viewPositionInList);
+    }
+
+    @Override
     public void onTimeReminderClick(View view, ArrayList<View> reminderViews) {
         //This variable will allow us to determine view's position and therefore the appropriate
         // reminder for it
@@ -132,5 +118,23 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
                 timeSetListener, c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE), false);
         timePickerDialog.show();
+    }
+
+    @Override
+    public void addReminder() {
+        Reminder reminder = new Reminder();
+        reminder.init();
+        getDataManager().getMed().addReminder(reminder);
+        getMvpView().addReminder(reminder);
+    }
+
+    private void updateReminderTimeOfDay(int viewPositionInList, long time) {
+        getDataManager().getMed().updateReminderTimeOfDay(viewPositionInList, time);
+    }
+
+    @Override
+    public void onDetach() {
+        getDataManager().removeListener(DataManager.VALUE_EVENT_LISTENER);
+        super.onDetach();
     }
 }

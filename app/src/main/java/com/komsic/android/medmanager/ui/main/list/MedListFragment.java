@@ -2,6 +2,7 @@ package com.komsic.android.medmanager.ui.main.list;
 
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
+import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
 import java.util.List;
 
@@ -29,9 +32,8 @@ import static android.content.Context.SEARCH_SERVICE;
 public class MedListFragment extends BaseFragment implements
         MedListMvpView {
 
-    private RecyclerView mRecyclerView;
     private MedListAdapter mAdapter;
-    private MedListPresenter<MedListMvpView> mPresenter;
+    private MedListMvpPresenter<MedListMvpView> mPresenter;
 
     public static MedListFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,15 +49,15 @@ public class MedListFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med_list, container, false);
-        mRecyclerView = rootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
 
 
         mAdapter = new MedListAdapter(getContext());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mAdapter);
 
         mPresenter = new MedListPresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
@@ -72,11 +74,13 @@ public class MedListFragment extends BaseFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.fragment_list_menu, menu);
 
         SearchManager searchManager = (SearchManager) getBaseActivity().getSystemService(SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getBaseActivity().getComponentName()));
+        if (searchManager != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getBaseActivity().getComponentName()));
+        }
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -96,7 +100,9 @@ public class MedListFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort:
-                mAdapter.sortMedList();
+//                mAdapter.sortMedList();
+                FirebaseAuth.getInstance().signOut();
+                getBaseActivity().startActivity(SplashActivity.getStartIntent(getBaseActivity()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

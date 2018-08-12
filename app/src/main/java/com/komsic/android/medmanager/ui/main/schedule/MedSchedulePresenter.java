@@ -1,7 +1,5 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
-import android.util.Log;
-
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 
@@ -14,7 +12,7 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
 
     private long mSelectedDate;
 
-    public MedSchedulePresenter(DataManager dataManager) {
+    MedSchedulePresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -39,7 +37,7 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
 
     @Override
     public void onDetach() {
-        super.onDetach();
         getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
+        super.onDetach();
     }
 }

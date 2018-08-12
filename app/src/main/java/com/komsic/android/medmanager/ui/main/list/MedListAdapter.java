@@ -2,6 +2,7 @@ package com.komsic.android.medmanager.ui.main.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
 
     }
 
+    @NonNull
     @Override
     public MedListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MedListViewHolder(LayoutInflater
@@ -46,7 +48,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
     }
 
     @Override
-    public void onBindViewHolder(MedListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MedListViewHolder holder, int position) {
         final Med currentMed = filteredList.get(position);
 
         holder.textMedName.setText(currentMed.name);
@@ -81,11 +83,6 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
             filteredList = mMedList;
             notifyItemInserted(filteredList.size() - 1);
         }
-//        if (!mMedList.contains(newMed)) {
-//            mMedList.add(newMed);
-//            filteredList = mMedList;
-//            notifyItemInserted(filteredList.size() - 1);
-//        }
     }
 
     public void sortMedList() {
@@ -102,11 +99,12 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
         return mMedFilter;
     }
 
-    public class MedListViewHolder extends RecyclerView.ViewHolder {
+    class MedListViewHolder extends RecyclerView.ViewHolder {
         TextView textMedName;
         TextView textStartDate;
         TextView textEndDate;
-        public MedListViewHolder(View itemView) {
+
+        MedListViewHolder(View itemView) {
             super(itemView);
 
             textMedName = itemView.findViewById(R.id.text_item_list_med_name);

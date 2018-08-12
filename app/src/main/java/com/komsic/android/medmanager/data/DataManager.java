@@ -1,7 +1,13 @@
 package com.komsic.android.medmanager.data;
 
-import android.util.Log;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,6 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.data.model.Reminder;
+import com.komsic.android.medmanager.data.model.User;
+import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
@@ -26,7 +34,8 @@ import java.util.Set;
  * This class is responsible for storing data
  */
 
-public class DataManager implements ValueEventListener, ChildEventListener {
+public class DataManager implements ValueEventListener, ChildEventListener,
+        FirebaseAuth.AuthStateListener {
     private static final String TAG = "DataManager";
 
     public static final int VALUE_EVENT_LISTENER = 1;
@@ -43,6 +52,7 @@ public class DataManager implements ValueEventListener, ChildEventListener {
     private int mAlarmListSize;
 
     private Med mMed;
+    private User mCurrentUser;
 
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mChildDatabaseReference;
@@ -69,8 +79,8 @@ public class DataManager implements ValueEventListener, ChildEventListener {
         }
 
         mMed = new  Med();
-        mChildDatabaseReference = FirebaseDatabase.getInstance().getReference().child("medList");
-        mChildDatabaseReference.addChildEventListener(this);
+
+        FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
     public Map<String, Boolean> getDayStateMap() {
@@ -137,7 +147,8 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     public void addListenerForSingleValueEvent(String s, MedEventListener medEventListener) {
         mMedEventListener = medEventListener;
-        mDatabaseReference =FirebaseDatabase.getInstance().getReference().child("medList/" + s);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/"
+                + mCurrentUser.getUid() + "/userMedList/" + s);
         mDatabaseReference.addListenerForSingleValueEvent(this);
     }
 
@@ -156,7 +167,8 @@ public class DataManager implements ValueEventListener, ChildEventListener {
     }
 
     public void updateChildren(String s, Med med) {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(s);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/" +
+                mCurrentUser.getUid() + "/userMedList/" + s);
         mDatabaseReference.updateChildren(med.toMap());
     }
 
@@ -193,7 +205,6 @@ public class DataManager implements ValueEventListener, ChildEventListener {
         }
 
         if (mAlarmEventListener != null) {
-            Log.e(TAG, "processSchedule: " );
             mAlarmEventListener.onAlarmChanged();
         }
 
@@ -212,6 +223,110 @@ public class DataManager implements ValueEventListener, ChildEventListener {
 
     public Set<Alarm> getAlarmList() {
         return mAlarmList;
+    }
+
+    public void storeUser(String fullName, String username) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(username)
+                .build();
+
+        if (user != null) {
+            user.updateProfile(profileUpdates);
+
+            mCurrentUser = new User(user.getEmail(), fullName, username, user.getUid());
+
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+            databaseRef.child("users").child(user.getUid()).child("userInfo")
+                    .setValue(mCurrentUser);
+
+            setMedListListener();
+        }
+    }
+
+    private void setMedListListener() {
+        if (mCurrentUser != null) {
+            mChildDatabaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child("users/" + mCurrentUser.getUid() + "/userMedList");
+            mChildDatabaseReference.addChildEventListener(this);
+        }
+    }
+
+    public void createUserWithEmailAndPassword(String email, String password,
+                                               OnCompleteListener<AuthResult> completeListener,
+                                               BaseActivity activity) {
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, completeListener);
+    }
+
+    public void addMed(Med newMed) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        newMed.id = databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList").push()
+                .getKey();
+        databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList" + "/" + newMed.id)
+                .setValue(newMed);
+    }
+
+    public void fetchCurrentUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        if (user != null) {
+            databaseRef.child("users").child(user.getUid()).child("userInfo")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null) {
+                                mCurrentUser = dataSnapshot.getValue(User.class);
+                                setMedListListener();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    public boolean onForgotPasswordClicked(String email) {
+        final boolean[] status = new boolean[1];
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        status[0] = task.isSuccessful();
+                    }
+                });
+        return status[0];
+    }
+
+    public void signIn(String email, String password, BaseActivity activity,
+                       OnCompleteListener<AuthResult> onCompleteListener) {
+        FirebaseAuth.getInstance()
+                .signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, onCompleteListener);
+    }
+
+    public boolean isUserSignedIn() {
+        return FirebaseAuth.getInstance().getCurrentUser() == null;
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            sDataManager = new DataManager();
+        } else {
+            sDataManager = null;
+            firebaseAuth.removeAuthStateListener(this);
+        }
     }
 
     public interface MedEventListener{

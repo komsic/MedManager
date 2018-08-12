@@ -4,9 +4,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 
-public class SplashPresenter<V extends SplashMvpView> extends BasePresenter<V> {
+public class SplashPresenter<V extends SplashMvpView> extends BasePresenter<V>
+        implements SplashMvpPresenter<V> {
 
-    public SplashPresenter(DataManager dataManager) {
+    SplashPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -20,11 +21,10 @@ public class SplashPresenter<V extends SplashMvpView> extends BasePresenter<V> {
     private void decideNextActivity() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             getMvpView().openMainActivity();
-        } else {
-            getMvpView().toastMessage("No active user");
         }
     }
 
+    @Override
     public void openLoginActivity(int whichFragment) {
         getMvpView().openLoginActivity(whichFragment);
     }

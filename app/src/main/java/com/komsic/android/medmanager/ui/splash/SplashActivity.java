@@ -1,10 +1,10 @@
 package com.komsic.android.medmanager.ui.splash;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -17,7 +17,7 @@ public class SplashActivity extends BaseActivity implements SplashMvpView, View.
     public static final String FRAGMENT_EXTRA = "FRAGMENT_EXTRA";
     public static final int SIGN_IN_EXTRA = 1;
     public static final int ADD_NEW_EXTRA = 2;
-    private SplashPresenter<SplashMvpView> mPresenter;
+    private SplashMvpPresenter<SplashMvpView> mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +55,6 @@ public class SplashActivity extends BaseActivity implements SplashMvpView, View.
     }
 
     @Override
-    public void toastMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.text_login:
@@ -71,5 +66,15 @@ public class SplashActivity extends BaseActivity implements SplashMvpView, View.
             default:
                 throw new UnsupportedOperationException("Not a valid view");
         }
+    }
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, SplashActivity.class);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }

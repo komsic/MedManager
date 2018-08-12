@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -18,9 +19,7 @@ import static com.komsic.android.medmanager.ui.splash.SplashActivity.SIGN_IN_EXT
 
 public class LoginActivity extends BaseActivity implements LogInMvpView {
 
-    private int mIntentExtra;
-
-    private LoginPresenter<LogInMvpView> mPresenter;
+    private LoginMvpPresenter<LogInMvpView> mPresenter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LoginActivity.class);
@@ -39,10 +38,10 @@ public class LoginActivity extends BaseActivity implements LogInMvpView {
 
     @Override
     protected void setUp() {
-        mIntentExtra = getIntent().getIntExtra(SplashActivity.FRAGMENT_EXTRA, 1);
+        int intentExtra = getIntent().getIntExtra(SplashActivity.FRAGMENT_EXTRA, 1);
 
-        if (mIntentExtra > 0) {
-            mPresenter.attachFragment(mIntentExtra);
+        if (intentExtra > 0) {
+            mPresenter.attachFragment(intentExtra);
         }
     }
 
@@ -65,6 +64,18 @@ public class LoginActivity extends BaseActivity implements LogInMvpView {
             default:
                 throw new UnsupportedOperationException("Fragment invalid");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("", "onStart: user is signed in " + mPresenter.isUserSignedIn());
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }
 

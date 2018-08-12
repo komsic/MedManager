@@ -24,8 +24,8 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
 
     @Override
     public void onDetach() {
-        super.onDetach();
         getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
+        super.onDetach();
     }
 
     @Override

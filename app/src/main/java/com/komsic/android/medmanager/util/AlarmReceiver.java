@@ -24,7 +24,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ACTION_NOTIFY.equals(intent.getAction())) {
-            // TODO: This method is called when the BroadcastReceiver is receiving
             // an Intent broadcast.
             NotificationManager notificationManager = (NotificationManager)
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
