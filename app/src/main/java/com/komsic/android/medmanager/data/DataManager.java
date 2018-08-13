@@ -83,8 +83,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
-    public Map<String, Boolean> getDayStateMap() {
-        return mDayStateMap;
+    public Map<String, Boolean> getDayStateMap(int reminderPosition) {
+        return mMed.getDayStateMap(reminderPosition);
     }
 
     public void setDayStateMap(Map<String, Boolean> dayStateMap) {
@@ -367,6 +367,22 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         }
 
         return alarmList.getAlarmList();
+    }
+
+    public void updateCurrentReminderDayState(boolean status, int dayOfTheWeek, int reminderIndex) {
+        mMed.updateCurrentReminderDayState(status, dayOfTheWeek, reminderIndex);
+    }
+
+    public boolean getCurrentReminderDayState(int reminderIndex, int dayOfTheWeek) {
+        return mMed.getCurrentReminderDayState(reminderIndex, dayOfTheWeek);
+    }
+
+    public void removeReminderDayState(int reminderPosition) {
+        mMed.removeReminderDayState(reminderPosition);
+    }
+
+    public List<Reminder> getMedReminders() {
+        return mMed.reminders;
     }
 
     public interface MedEventListener{

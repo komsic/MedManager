@@ -28,6 +28,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     private String selectedDate;
     private MedScheduleAdapter adapter;
     private MedScheduleMvpPresenter<MedScheduleMvpView> mPresenter;
+    private CalendarView mCalendarView;
 
     public static MedScheduleFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,10 +41,10 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med_schedule, container, false);
 
-        CalendarView calendarView = rootView.findViewById(R.id.tv);
+        mCalendarView = rootView.findViewById(R.id.tv);
         RecyclerView recyclerView = rootView.findViewById(R.id.list);
 
-        selectedDate = CalendarUtil.getDateInString(calendarView.getDate());
+        selectedDate = CalendarUtil.getDateInString(mCalendarView.getDate());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new MedScheduleAdapter(getContext());
@@ -53,7 +54,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
         mPresenter.onAttach(this);
         mPresenter.onDateSelected(CalendarUtil.parseDateFromString(selectedDate).getTime());
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month,
@@ -77,6 +78,14 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     public void onDestroyView() {
         mPresenter.onDetach();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (CalendarUtil.parseDateFromString(selectedDate).getTime() <= 0) {
+            mCalendarView.setDate(CalendarUtil.getCurrentTime());
+        }
     }
 
     @Override

@@ -18,9 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="Amala"/>
+            tools:text="Amala" />
 
         <View
             android:layout_width="match_parent"
@@ -34,9 +32,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-            app:layout_constraintLeft_toLeftOf="@+id/text_med_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_med_name"
-            android:text="For Fever"/>
+            tools:text="For Fever" />
 
         <View
             android:layout_width="match_parent"
@@ -51,10 +47,8 @@
             android:textColor="#F44336"
             android:textStyle="italic"
             android:layout_gravity="end"
-            android:text="Starts on Wed 19th, Apr 2018"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_description"/>
+            tools:text="Starts on Wed 19th, Apr 2018" />
 
         <TextView
             android:id="@+id/text_end_date"
@@ -66,25 +60,20 @@
             android:textColor="#4CAF50"
             android:layout_marginBottom="8dp"
             android:textStyle="italic"
-            android:text="Ends on Tue 20th, May 2018"
-            app:layout_constraintLeft_toLeftOf="@+id/text_start_date"
-            app:layout_constraintTop_toBottomOf="@+id/text_start_date"/>
+            tools:text="Ends on Tue 20th, May 2018" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"/>
 
-        <LinearLayout
-            android:id="@+id/linear_layout_reminder"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_reminder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="vertical"
-            app:layout_constraintLeft_toLeftOf="@+id/text_description"
-            app:layout_constraintTop_toBottomOf="@+id/text_end_date">
-
-        </LinearLayout>
+            tools:listitem="@layout/item_reminder" />
 
         <TextView
             android:id="@+id/text_add_reminder"

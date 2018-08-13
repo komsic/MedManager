@@ -3,6 +3,7 @@ package com.komsic.android.medmanager.data.model;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
+import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.text.SimpleDateFormat;
@@ -126,5 +127,9 @@ public class Reminder implements Comparable<Reminder> {
     @Override
     public String toString() {
         return CalendarUtil.getTimeInString(timeOfDay) + " | " + dayStates + "\t";
+    }
+
+    public void updateCurrentReminderDayState(boolean status, int dayOfTheWeek) {
+        dayStates.put(DataManager.daysOfTheWeek[dayOfTheWeek], status);
     }
 }

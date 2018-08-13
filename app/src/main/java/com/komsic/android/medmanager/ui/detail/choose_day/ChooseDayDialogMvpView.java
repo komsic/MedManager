@@ -1,6 +1,6 @@
 package com.komsic.android.medmanager.ui.detail.choose_day;
 
-import android.widget.TextView;
+import android.view.View;
 
 import com.komsic.android.medmanager.ui.base.DialogMvpView;
 
@@ -13,4 +13,6 @@ import java.util.Map;
 public interface ChooseDayDialogMvpView extends DialogMvpView {
 
     void init(Map<String, Boolean> dayStateMap);
+
+    void onDayClicked(boolean status, View view, int dayOfTheWeek);
 }

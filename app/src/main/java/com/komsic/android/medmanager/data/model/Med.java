@@ -66,17 +66,16 @@ public class Med implements Comparable<Med>{
 
     @Exclude
     public void updateReminderDayState(int index, Map<String, Boolean> newDayState) {
-        reminders.get(index).updateReminderDayStateMap(newDayState);
+        getReminder(index).updateReminderDayStateMap(newDayState);
+    }
+
+    private Reminder getReminder(int reminderIndex) {
+        return reminders.get(reminderIndex);
     }
 
     @Exclude
     public void updateReminderTimeOfDay(int index, long newTimeOfDay) {
-        reminders.get(index).updateReminderTimeOfDay(newTimeOfDay);
-    }
-
-    @Exclude
-    public void removeReminderDayState(Reminder reminder) {
-        reminders.remove(reminder);
+        getReminder(index).updateReminderTimeOfDay(newTimeOfDay);
     }
 
     @Override
@@ -100,5 +99,22 @@ public class Med implements Comparable<Med>{
         endDate = med.endDate;
         id = med.id;
         reminders = med.reminders;
+    }
+
+    @Exclude
+    public void removeReminderDayState(int reminderPosition) {
+        reminders.remove(reminderPosition);
+    }
+
+    public Map<String, Boolean> getDayStateMap(int reminderPosition) {
+        return getReminder(reminderPosition).dayStates;
+    }
+
+    public void updateCurrentReminderDayState(boolean status, int dayOfTheWeek, int reminderIndex) {
+        getReminder(reminderIndex).updateCurrentReminderDayState(status, dayOfTheWeek);
+    }
+
+    public boolean getCurrentReminderDayState(int reminderIndex, int dayOfTheWeek) {
+        return getReminder(reminderIndex).getDayState(dayOfTheWeek);
     }
 }
