@@ -117,4 +117,8 @@ public class Med implements Comparable<Med>{
     public boolean getCurrentReminderDayState(int reminderIndex, int dayOfTheWeek) {
         return getReminder(reminderIndex).getDayState(dayOfTheWeek);
     }
+
+    public void updateReminderTime(int reminderPosition, long timeInMillis) {
+        getReminder(reminderPosition).setTimeOfDay(timeInMillis);
+    }
 }

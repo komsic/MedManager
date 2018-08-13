@@ -385,6 +385,10 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         return mMed.reminders;
     }
 
+    public void updateCurrentReminderTime(int reminderPosition, long timeInMillis) {
+        mMed.updateReminderTime(reminderPosition, timeInMillis);
+    }
+
     public interface MedEventListener{
         void onMedAdded();
     }

@@ -1,11 +1,13 @@
 package com.komsic.android.medmanager.ui.detail;
 
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -13,6 +15,7 @@ import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.detail.choose_day.ChooseDayDialog;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class DetailActivity extends BaseActivity implements DetailMvpView,
@@ -98,6 +101,11 @@ public class DetailActivity extends BaseActivity implements DetailMvpView,
     }
 
     @Override
+    public void updateReminderList(List<Reminder> reminders) {
+        mReminderItemAdapter.updateList(reminders);
+    }
+
+    @Override
     public void openDialogChooseDay(int reminderPosition) {
         final ChooseDayDialog dialogChooseDay = new ChooseDayDialog();
         dialogChooseDay.setReminderIndex(reminderPosition);
@@ -111,11 +119,6 @@ public class DetailActivity extends BaseActivity implements DetailMvpView,
                 mPresenter.onDialogDismissed();
             }
         });
-    }
-
-    @Override
-    public void updateReminderList(List<Reminder> reminders) {
-        mReminderItemAdapter.updateList(reminders);
     }
 
     @Override
@@ -142,7 +145,27 @@ public class DetailActivity extends BaseActivity implements DetailMvpView,
     }
 
     @Override
-    public void onTimeReminderClick(int reminderPosition) {
+    public void onTimeReminderClick(final int reminderPosition, long time) {
+        TimePickerDialog.OnTimeSetListener timeSetListener =
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
 
+                        mPresenter.updateCurrentReminderTime(reminderPosition, calendar.getTimeInMillis());
+                    }
+                };
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                timeSetListener,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false);
+        timePickerDialog.show();
     }
 }

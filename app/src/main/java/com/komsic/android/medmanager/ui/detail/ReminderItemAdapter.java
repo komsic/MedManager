@@ -37,9 +37,11 @@ public class ReminderItemAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReminderItemViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ReminderItemViewHolder holder, int position) {
 
-        final Reminder currentReminder = mReminderList.get(position);
+        final int index = position;
+
+        final Reminder currentReminder = mReminderList.get(index);
 
         if (currentReminder != null) {
             holder.timeText.setText(CalendarUtil.getTimeInString(currentReminder.getTimeOfDay()));
@@ -47,7 +49,7 @@ public class ReminderItemAdapter
             if (!currentReminder.dayStates.containsValue(false)) {
                 holder.dayStates.setText(R.string.daily);
             } else if (!currentReminder.dayStates.containsValue(true)) {
-                deleteReminder(position);
+                deleteReminder(index);
             } else {
                 StringBuilder sb = new StringBuilder();
                 List<String> sortedDays = Util.sortDaysOfWeek(currentReminder.dayStates.keySet());
@@ -62,21 +64,22 @@ public class ReminderItemAdapter
             holder.deleteItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteReminder(position);
+                    deleteReminder(index);
                 }
             });
 
             holder.dayStates.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mReminderItemAdapterEvent.onDayReminderClick(position);
+                    mReminderItemAdapterEvent.onDayReminderClick(index);
                 }
             });
 
             holder.timeText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mReminderItemAdapterEvent.onTimeReminderClick(position);
+                    mReminderItemAdapterEvent.onTimeReminderClick(index,
+                            currentReminder.getTimeOfDay());
                 }
             });
         }
@@ -109,7 +112,7 @@ public class ReminderItemAdapter
 
         void onDayReminderClick(int position);
 
-        void onTimeReminderClick(int position);
+        void onTimeReminderClick(int position, long time);
     }
 
     class ReminderItemViewHolder extends RecyclerView.ViewHolder {
