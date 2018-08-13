@@ -11,14 +11,12 @@ import android.widget.CalendarView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
-import com.komsic.android.medmanager.data.model.Reminder;
+import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by komsic on 4/2/2018.
@@ -52,7 +50,6 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
 
         mPresenter = new MedSchedulePresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
-        mPresenter.onViewPrepared();
         mPresenter.onDateSelected(CalendarUtil.parseDateFromString(selectedDate).getTime());
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -88,7 +85,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     }
 
     @Override
-    public void updateList(List<Map<Reminder, Set<String>>> medDataList) {
+    public void updateList(List<Alarm> medDataList) {
         adapter.addScheduleList(medDataList);
     }
 }

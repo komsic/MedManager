@@ -18,9 +18,12 @@ import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.data.model.User;
+import com.komsic.android.medmanager.data.model.alarm.AlarmItem;
+import com.komsic.android.medmanager.data.model.alarm.AlarmList;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +50,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private Map<String, Boolean> mDayStateMap;
 
     private List<Med> mMedList;
-    private int mAlarmListSize;
+    private AlarmList mAlarmList;
+    private AlarmItemEvent mAlarmEvent;
 
     private Med mMed;
     private User mCurrentUser;
@@ -56,7 +60,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private DatabaseReference mChildDatabaseReference;
 
     private MedEventListener mMedEventListener;
-    private MedEventListener scheduleMedEventListener;
 
     public static DataManager getInstance() {
         if (sDataManager == null) {
@@ -67,6 +70,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     private DataManager() {
         mMedList = new ArrayList<>();
+        mAlarmList = new AlarmList();
         mDayStateMap = new HashMap<>();
 
         for (String dayState : daysOfTheWeek) {
@@ -107,8 +111,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         if (dataSnapshot != null && mMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mMedList.add(mMed);
+            processAlarm(mMed);
             mMedEventListener.onMedAdded();
-            scheduleMedEventListener.onMedAdded();
         }
     }
 
@@ -134,10 +138,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public void setMedEventList(MedEventListener medEventListener) {
         mMedEventListener = medEventListener;
-    }
-
-    public void setMedEventSchedule(MedEventListener medEventListener) {
-        scheduleMedEventListener = medEventListener;
     }
 
     public void addListenerForSingleValueEvent(String s, MedEventListener medEventListener) {
@@ -306,7 +306,77 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mMedList.clear();
     }
 
+    private void processAlarm(Med newMed) {
+        List<AlarmItem> alarms = extractAlarmFromRem(newMed, null);
+
+        mAlarmList.addAlarmItems(alarms);
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onNewAlarmItemAdded(alarms);
+        }
+    }
+
+    public List<AlarmItem> extractAlarmFromRem(Med med, Long currentTime) {
+        List<AlarmItem> alarms = new ArrayList<>();
+
+        if (currentTime == null) {
+            currentTime = Calendar.getInstance().getTimeInMillis();
+        }
+        if (med.startDate <= currentTime && med.endDate >= currentTime) {
+            if (med.reminders.size() > 0) {
+                for (Reminder rem : med.reminders) {
+                    if (rem.getDateDayState(currentTime)) {
+                        alarms.add(new AlarmItem(rem.getTimeOfDay(), med.name));
+                    }
+                }
+            }
+        }
+
+        return alarms;
+    }
+
+    public void setAlarmEvent(AlarmItemEvent alarmEvent) {
+        mAlarmEvent = alarmEvent;
+    }
+
+    public void removeAlarmItems(List<AlarmItem> alarms) {
+        mAlarmList.removeAlarmItems(alarms);
+
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onAlarmItemRemoved(alarms);
+        }
+    }
+
+    public void changeAlarmItemTime(AlarmItem alarm, long newTime) {
+        mAlarmList.changeAlarmItemTime(alarm, newTime);
+
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onAlarmItemTimeChanged(alarm, newTime);
+        }
+    }
+
+    public List<Alarm> getScheduleListForSelectedDate(long selectedDate) {
+        AlarmList alarmList = new AlarmList();
+
+        for (Med med : mMedList) {
+            alarmList.addAlarmItems(extractAlarmFromRem(med, selectedDate));
+        }
+
+        return alarmList.getAlarmList();
+    }
+
     public interface MedEventListener{
         void onMedAdded();
+    }
+
+    public interface AlarmItemEvent {
+        void onNewAlarmItemAdded(List<AlarmItem> alarm);
+
+        void onAlarmItemRemoved(List<AlarmItem> alarm);
+
+        void onNameAddedToSet(AlarmItem alarm);
+
+        void onNameRemovedFromSet(AlarmItem alarm);
+
+        void onAlarmItemTimeChanged(AlarmItem time, long newTime);
     }
 }

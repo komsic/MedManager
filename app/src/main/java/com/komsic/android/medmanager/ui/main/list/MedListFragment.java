@@ -33,7 +33,6 @@ public class MedListFragment extends BaseFragment implements
         MedListMvpView {
 
     private static final String TAG = "MedListFragment";
-    int i;
 
     private MedListAdapter mAdapter;
     private MedListMvpPresenter<MedListMvpView> mPresenter;

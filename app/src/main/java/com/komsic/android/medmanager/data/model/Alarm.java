@@ -1,5 +1,7 @@
 package com.komsic.android.medmanager.data.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
@@ -11,7 +13,7 @@ import java.util.Set;
  * Created by komsic on 4/2/2018.
  */
 
-public class Alarm {
+public class Alarm implements Comparable<Alarm> {
 
     private long timeOfDay;
     public Set<String> medNames;
@@ -75,5 +77,10 @@ public class Alarm {
 
     public long getTimeOfDay() {
         return CalendarUtil.convertToTime(timeOfDay);
+    }
+
+    @Override
+    public int compareTo(@NonNull Alarm o) {
+        return (int) (timeOfDay - o.timeOfDay);
     }
 }
