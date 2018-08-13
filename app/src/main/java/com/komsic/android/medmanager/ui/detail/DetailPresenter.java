@@ -24,6 +24,8 @@ import java.util.Calendar;
 public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         implements DetailMvpPresenter<V>, DataManager.MedEventListener {
 
+    private static final String TAG = "DetailPresenter";
+
     private String databaseRef;
 
     DetailPresenter(DataManager dataManager) {

@@ -38,27 +38,7 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
     }
 
     @Override
-    public void onNewAlarmItemAdded(List<AlarmItem> alarm) {
-        getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
-    }
-
-    @Override
-    public void onAlarmItemRemoved(List<AlarmItem> alarm) {
-        getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
-    }
-
-    @Override
-    public void onNameAddedToSet(AlarmItem alarm) {
-
-    }
-
-    @Override
-    public void onNameRemovedFromSet(AlarmItem alarm) {
-
-    }
-
-    @Override
-    public void onAlarmItemTimeChanged(AlarmItem time, long newTime) {
+    public void onAlarmListChanged(List<AlarmItem> alarm) {
         getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
     }
 }

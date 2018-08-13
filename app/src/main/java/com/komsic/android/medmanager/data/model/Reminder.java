@@ -122,4 +122,9 @@ public class Reminder implements Comparable<Reminder> {
     public void updateReminderTimeOfDay(long newTimeOfDay) {
         timeOfDay = newTimeOfDay;
     }
+
+    @Override
+    public String toString() {
+        return CalendarUtil.getTimeInString(timeOfDay) + " | " + dayStates + "\t";
+    }
 }

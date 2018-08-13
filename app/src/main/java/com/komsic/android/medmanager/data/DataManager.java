@@ -1,7 +1,6 @@
 package com.komsic.android.medmanager.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +21,7 @@ import com.komsic.android.medmanager.data.model.User;
 import com.komsic.android.medmanager.data.model.alarm.AlarmItem;
 import com.komsic.android.medmanager.data.model.alarm.AlarmList;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
+import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,7 +119,16 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        if (dataSnapshot != null) {
+            Med med = dataSnapshot.getValue(Med.class);
 
+            int updatedMedIndex = mMedList.indexOf(med);
+            mMedList.get(updatedMedIndex).update(med);
+
+            if (mAlarmEvent != null) {
+                mAlarmEvent.onAlarmListChanged(null);
+            }
+        }
     }
 
     @Override
@@ -312,12 +321,11 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
         mAlarmList.addAlarmItems(alarms);
         if (mAlarmEvent != null) {
-            mAlarmEvent.onNewAlarmItemAdded(alarms);
-            Log.e(TAG, "processAlarm: addAlarm");
+            mAlarmEvent.onAlarmListChanged(alarms);
         }
     }
 
-    public List<AlarmItem> extractAlarmFromRem(Med med, Long currentTime) {
+    private List<AlarmItem> extractAlarmFromRem(Med med, Long currentTime) {
         List<AlarmItem> alarms = new ArrayList<>();
 
         if (currentTime == null) {
@@ -342,21 +350,16 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public void removeAlarmItems(List<AlarmItem> alarms) {
         mAlarmList.removeAlarmItems(alarms);
-
-        if (mAlarmEvent != null) {
-            mAlarmEvent.onAlarmItemRemoved(alarms);
-        }
     }
 
     public void changeAlarmItemTime(AlarmItem alarm, long newTime) {
         mAlarmList.changeAlarmItemTime(alarm, newTime);
-
-        if (mAlarmEvent != null) {
-            mAlarmEvent.onAlarmItemTimeChanged(alarm, newTime);
-        }
     }
 
     public List<Alarm> getScheduleListForSelectedDate(long selectedDate) {
+        if (selectedDate <= 0) {
+            selectedDate = CalendarUtil.getCurrentTime();
+        }
         AlarmList alarmList = new AlarmList();
 
         for (Med med : mMedList) {
@@ -371,14 +374,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     public interface AlarmItemEvent {
-        void onNewAlarmItemAdded(List<AlarmItem> alarm);
-
-        void onAlarmItemRemoved(List<AlarmItem> alarm);
-
-        void onNameAddedToSet(AlarmItem alarm);
-
-        void onNameRemovedFromSet(AlarmItem alarm);
-
-        void onAlarmItemTimeChanged(AlarmItem time, long newTime);
+        void onAlarmListChanged(List<AlarmItem> alarm);
     }
 }

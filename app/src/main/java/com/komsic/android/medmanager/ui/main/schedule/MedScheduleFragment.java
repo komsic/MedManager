@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,14 +76,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     @Override
     public void onDestroyView() {
         mPresenter.onDetach();
-        Log.e(TAG, "onDestroyView: ");
         super.onDestroyView();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter.notifyDataSetChanged();
     }
 
     @Override

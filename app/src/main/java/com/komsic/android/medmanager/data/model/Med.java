@@ -3,9 +3,11 @@ package com.komsic.android.medmanager.data.model;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
+import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -80,5 +82,23 @@ public class Med implements Comparable<Med>{
     @Override
     public int compareTo(@NonNull Med compareMed) {
         return (int) (startDate - compareMed.startDate);
+    }
+
+    @Override
+    public String toString() {
+        return name + " | "
+                + description + " | "
+                + CalendarUtil.getDateInString(startDate) + " | "
+                + CalendarUtil.getDateInString(endDate) + " | "
+                + new HashSet<>(reminders) + "\n";
+    }
+
+    public void update(Med med) {
+        name = med.name;
+        description = med.description;
+        startDate = med.startDate;
+        endDate = med.endDate;
+        id = med.id;
+        reminders = med.reminders;
     }
 }
