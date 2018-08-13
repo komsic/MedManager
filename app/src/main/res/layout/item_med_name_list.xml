@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -10,9 +11,10 @@
         android:id="@+id/checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="4dp"
         android:button="@null"
         android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-        android:text="Amala" />
+        tools:text="Amala" />
 
 </LinearLayout>
