@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
@@ -26,6 +27,8 @@ import java.util.Set;
 
 class MedScheduleAdapter extends
         RecyclerView.Adapter<MedScheduleAdapter.MedScheduleViewHolder> {
+
+    private static final String TAG = "MedScheduleAdapter";
 
     private final Context context;
     private List<Alarm> dataList;
@@ -51,7 +54,9 @@ class MedScheduleAdapter extends
         holder.textTimeOfDay.setText(CalendarUtil.getTimeInString(currentAlarm.getTimeOfDay()));
 
         Set<String> medNames = currentAlarm.medNames;
-        holder.populateScheduleList(medNames);
+//        holder.populateScheduleList(medNames);
+        ItemScheduleAdapter adapter = new ItemScheduleAdapter(new ArrayList<>(medNames));
+        holder.scheduleLayout.setAdapter(adapter);
         holder.setIsRecyclable(false);
     }
 
@@ -68,12 +73,13 @@ class MedScheduleAdapter extends
 
     class MedScheduleViewHolder extends RecyclerView.ViewHolder {
         TextView textTimeOfDay;
-        LinearLayout scheduleLayout;
+        RecyclerView scheduleLayout;
 
         MedScheduleViewHolder(View itemView) {
             super(itemView);
             textTimeOfDay = itemView.findViewById(R.id.text_time_of_the_day);
-            scheduleLayout = itemView.findViewById(R.id.linear_layout_schedule);
+            scheduleLayout = itemView.findViewById(R.id.recycler_view_schedule);
+            scheduleLayout.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
 
         private View addViewToSchedule(String medName) {
@@ -89,6 +95,7 @@ class MedScheduleAdapter extends
         void populateScheduleList(Set<String> medNames) {
             for (String s : medNames) {
                 View view = addViewToSchedule(s);
+                Log.e(TAG, "populateScheduleList: " + view);
                 scheduleLayout.addView(view);
             }
         }

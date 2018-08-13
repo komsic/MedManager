@@ -126,6 +126,7 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         reminder.init();
         getDataManager().getMed().addReminder(reminder);
         getMvpView().addReminder(reminder);
+        getDataManager().processAlarm(getDataManager().getMed());
     }
 
     private void updateReminderTimeOfDay(int viewPositionInList, long time) {

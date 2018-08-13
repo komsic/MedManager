@@ -1,6 +1,7 @@
 package com.komsic.android.medmanager.data;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -306,12 +307,13 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mMedList.clear();
     }
 
-    private void processAlarm(Med newMed) {
+    public void processAlarm(Med newMed) {
         List<AlarmItem> alarms = extractAlarmFromRem(newMed, null);
 
         mAlarmList.addAlarmItems(alarms);
         if (mAlarmEvent != null) {
             mAlarmEvent.onNewAlarmItemAdded(alarms);
+            Log.e(TAG, "processAlarm: addAlarm");
         }
     }
 
