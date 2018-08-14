@@ -12,14 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
-import com.komsic.android.medmanager.ui.splash.SplashActivity;
+import com.komsic.android.medmanager.ui.main.MainActivity;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class MedListFragment extends BaseFragment implements
 
     private MedListAdapter mAdapter;
     private MedListMvpPresenter<MedListMvpView> mPresenter;
+    private ProgressBar mProgressBar;
 
     public static MedListFragment newInstance() {
         Bundle args = new Bundle();
@@ -55,7 +56,7 @@ public class MedListFragment extends BaseFragment implements
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med_list, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-
+        mProgressBar = rootView.findViewById(R.id.progress_bar);
 
         mAdapter = new MedListAdapter(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,14 +103,24 @@ public class MedListFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort:
-//                mAdapter.sortMedList();
-                FirebaseAuth.getInstance().signOut();
-                getBaseActivity().startActivity(SplashActivity.getStartIntent(getBaseActivity()));
-                getBaseActivity().finish();
+                mAdapter.sortMedList();
+//                FirebaseAuth.getInstance().signOut();
+//                getBaseActivity().startActivity(SplashActivity.getStartIntent(getBaseActivity()));
+//                getBaseActivity().finish();
+                return true;
+            case R.id.action_sign_out:
+                mPresenter.signOut();
+                mProgressBar.setVisibility(View.VISIBLE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSignOutDone() {
+        mProgressBar.setVisibility(View.GONE);
+        ((MainActivity) getBaseActivity()).openSplashActivity();
     }
 
     @Override

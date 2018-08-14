@@ -41,4 +41,10 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
     public void onAlarmListChanged(List<Alarm> alarm) {
         getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
     }
+
+    @Override
+    public void signOut() {
+        getDataManager().signOut();
+        getMvpView().onSignOutDone();
+    }
 }

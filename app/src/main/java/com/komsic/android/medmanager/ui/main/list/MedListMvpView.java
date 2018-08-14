@@ -11,4 +11,6 @@ import java.util.List;
 
 public interface MedListMvpView extends MvpView {
     void updateList(List<Med> newMedList);
+
+    void onSignOutDone();
 }

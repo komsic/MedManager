@@ -22,6 +22,12 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void signOut() {
+        getDataManager().signOut();
+        getMvpView().onSignOutDone();
+    }
+
+    @Override
     public void onDetach() {
         getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
         getDataManager().clearMedList();

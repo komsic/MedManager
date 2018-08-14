@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.komsic.android.medmanager.R;
@@ -94,20 +92,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_sign_out) {
-            mPresenter.signOut();
-            startActivity(SplashActivity.getStartIntent(this));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void openSplashActivity() {
+        startActivity(SplashActivity.getStartIntent(this));
+        finish();
     }
 
     @Override

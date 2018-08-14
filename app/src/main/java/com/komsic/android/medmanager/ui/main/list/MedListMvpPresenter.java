@@ -10,4 +10,6 @@ public interface MedListMvpPresenter<V extends MedListMvpView>
         extends MvpPresenter<V> {
 
     void onViewPrepared();
+
+    void signOut();
 }

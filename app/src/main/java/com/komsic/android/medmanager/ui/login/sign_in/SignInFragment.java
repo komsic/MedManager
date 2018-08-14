@@ -73,6 +73,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
         switch (view.getId()) {
             case R.id.text_forgot_password:
                 if (email.length() > 4 && email.contains("@")) {
+                    mProgressBar.setVisibility(View.VISIBLE);
                     mPresenter.onForgotPasswordClicked(email);
                 } else {
                     Toast.makeText(getBaseActivity(), "Please enter a valid email",
@@ -117,6 +118,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
 
     @Override
     public void issueForgottenEmailError() {
+        mProgressBar.setVisibility(View.GONE);
         Toast.makeText(getBaseActivity(), "Email sent", Toast.LENGTH_SHORT).show();
     }
 }

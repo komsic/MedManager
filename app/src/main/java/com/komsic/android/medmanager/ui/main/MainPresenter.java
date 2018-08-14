@@ -24,9 +24,4 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     public void openAddMedDialog() {
         getMvpView().openAddMedDialog();
     }
-
-    @Override
-    public void signOut() {
-        getDataManager().signOut();
-    }
 }

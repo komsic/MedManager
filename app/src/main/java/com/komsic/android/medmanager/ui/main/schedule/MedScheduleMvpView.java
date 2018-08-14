@@ -12,4 +12,6 @@ import java.util.List;
 public interface MedScheduleMvpView extends MvpView {
 
     void updateList(List<Alarm> alarmList);
+
+    void onSignOutDone();
 }

@@ -14,4 +14,9 @@
         android:orderInCategory="50"
         android:title="@string/action_sort"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_sign_out"
+        android:orderInCategory="500"
+        android:title="@string/action_sign_out"
+        app:showAsAction="never" />
 </menu>
