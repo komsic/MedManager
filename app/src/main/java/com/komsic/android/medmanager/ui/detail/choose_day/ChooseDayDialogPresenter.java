@@ -21,12 +21,14 @@ public class ChooseDayDialogPresenter<V extends ChooseDayDialogMvpView> extends 
 
     @Override
     public void onDismiss() {
-        getMvpView().dismissDialog("");
+        getMvpView().dismissDialog("dialogChooseDay");
     }
 
     @Override
     public void init() {
-        if (getDataManager().getDayStateMap(reminderIndex) != null) {
+        if (getDataManager().getDayStateMap(reminderIndex) != null &&
+                getMvpView() != null &&
+                getDataManager() != null) {
             getMvpView().init(getDataManager().getDayStateMap(reminderIndex));
         }
     }

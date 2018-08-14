@@ -25,12 +25,9 @@ import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by komsic on 4/2/2018.
@@ -51,8 +48,10 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private Map<String, Boolean> mDayStateMap;
 
     private List<Med> mMedList;
-    private AlarmList mAlarmList;
+    private List<Alarm> mAlarmList;
     private AlarmItemEvent mAlarmEvent;
+
+    private AlarmItemEvent mServiceAlarmEvent;
 
     private Med mMed;
     private User mCurrentUser;
@@ -71,7 +70,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     private DataManager() {
         mMedList = new ArrayList<>();
-        mAlarmList = new AlarmList();
+        mAlarmList = new ArrayList<>();
         mDayStateMap = new HashMap<>();
 
         for (String dayState : daysOfTheWeek) {
@@ -112,7 +111,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         if (dataSnapshot != null && mMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mMedList.add(mMed);
-            processAlarm(mMed);
+            processAlarm();
             mMedEventListener.onMedAdded();
         }
     }
@@ -128,6 +127,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
             if (mAlarmEvent != null) {
                 mAlarmEvent.onAlarmListChanged(null);
             }
+
+            processAlarm();
         }
     }
 
@@ -178,36 +179,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public List<Med> getMedList() {
         return mMedList;
-    }
-
-    public List<Map<Reminder, Set<String>>> processSchedule(long selectedDate) {
-        Map<Reminder, Set<String>> data = new HashMap<>();
-
-        for (Med med : mMedList) {
-            for (Reminder reminder : med.reminders) {
-                if (selectedDate >= med.startDate && selectedDate <= med.endDate) {
-                    if (reminder.getDateDayState(selectedDate)) {
-                        if (!data.containsKey(reminder)) {
-                            data.put(reminder, new HashSet<String>());
-                        }
-                        data.get(reminder).add(med.name);
-                    }
-                }
-            }
-        }
-
-        List<Map<Reminder, Set<String>>> dataList = new ArrayList<>();
-        List<Reminder> sortedKeySet = new ArrayList<>(data.keySet());
-        Collections.sort(sortedKeySet);
-        dataList.clear();
-        for (Reminder reminder : sortedKeySet) {
-            Map<Reminder, Set<String>> dataMap = new HashMap<>();
-            dataMap.put(reminder, data.get(reminder));
-            dataList.add(dataMap);
-            Alarm newAlarm = new Alarm(reminder.getTimeOfDay(), dataMap.get(reminder));
-        }
-
-        return dataList;
     }
 
     public void storeUser(String fullName, String username) {
@@ -316,13 +287,20 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mMedList.clear();
     }
 
-    public void processAlarm(Med newMed) {
-        List<AlarmItem> alarms = extractAlarmFromRem(newMed, null);
+    public void processAlarm() {
+        mAlarmList = getScheduleListForSelectedDate(-1);
 
-        mAlarmList.addAlarmItems(alarms);
-        if (mAlarmEvent != null) {
-            mAlarmEvent.onAlarmListChanged(alarms);
+        if (mServiceAlarmEvent != null) {
+            mServiceAlarmEvent.onAlarmListChanged(mAlarmList);
         }
+
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onAlarmListChanged(mAlarmList);
+        }
+    }
+
+    public void setServiceAlarmEvent(AlarmItemEvent serviceAlarmEvent) {
+        mServiceAlarmEvent = serviceAlarmEvent;
     }
 
     private List<AlarmItem> extractAlarmFromRem(Med med, Long currentTime) {
@@ -346,14 +324,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public void setAlarmEvent(AlarmItemEvent alarmEvent) {
         mAlarmEvent = alarmEvent;
-    }
-
-    public void removeAlarmItems(List<AlarmItem> alarms) {
-        mAlarmList.removeAlarmItems(alarms);
-    }
-
-    public void changeAlarmItemTime(AlarmItem alarm, long newTime) {
-        mAlarmList.changeAlarmItemTime(alarm, newTime);
     }
 
     public List<Alarm> getScheduleListForSelectedDate(long selectedDate) {
@@ -394,6 +364,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     public interface AlarmItemEvent {
-        void onAlarmListChanged(List<AlarmItem> alarm);
+        void onAlarmListChanged(List<Alarm> alarms);
     }
 }

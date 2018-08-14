@@ -23,8 +23,6 @@ import com.komsic.android.medmanager.ui.main.list.MedListFragment;
 import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
 import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
-import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NOTIFY;
-
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private MainMvpPresenter<MainMvpView> mPresenter;
@@ -92,9 +90,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         });
 
-        Intent startSyncServiceIntent = new Intent(this, SyncAlarmService.class);
-        startSyncServiceIntent.setAction(ACTION_NOTIFY);
-        startService(startSyncServiceIntent);
+        startService(SyncAlarmService.getStartIntent(this));
     }
 
     @Override

@@ -119,6 +119,11 @@ public class ChooseDayDialog extends BaseDialog implements ChooseDayDialogMvpVie
     }
 
     @Override
+    public void dismiss() {
+        super.dismiss();
+    }
+
+    @Override
     public void init(Map<String, Boolean> dayStateMap) {
         init(dayStateMap, sunTextView, monTextView, tueTextView, wedTextView, thuTextView,
                 friTextView, satTextView);

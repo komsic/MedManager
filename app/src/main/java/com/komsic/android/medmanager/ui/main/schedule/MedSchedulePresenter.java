@@ -1,7 +1,7 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
 import com.komsic.android.medmanager.data.DataManager;
-import com.komsic.android.medmanager.data.model.alarm.AlarmItem;
+import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
     }
 
     @Override
-    public void onAlarmListChanged(List<AlarmItem> alarm) {
+    public void onAlarmListChanged(List<Alarm> alarm) {
         getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
     }
 }

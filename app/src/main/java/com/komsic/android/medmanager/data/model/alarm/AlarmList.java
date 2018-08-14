@@ -83,6 +83,10 @@ public class AlarmList {
         }
     }
 
+    public void clear() {
+        alarmList.clear();
+    }
+
     public List<Alarm> getAlarmList() {
         List<Alarm> alarms = new ArrayList<>();
         for (long timeKey : alarmList.keySet()) {
