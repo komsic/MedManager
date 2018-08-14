@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
     private TextInputLayout fullNameInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout usernameInputLayout;
+    private ProgressBar mProgressBar;
 
     public NewUserFragment() {
         // Required empty public constructor
@@ -61,6 +63,8 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
         usernameInputLayout = rootView.findViewById(R.id.user_text_input);
         passwordInputLayout = rootView.findViewById(R.id.password_text_input);
 
+        mProgressBar = rootView.findViewById(R.id.progress_bar);
+
         TextView signUpText = rootView.findViewById(R.id.text_sign_up);
         signUpText.setOnClickListener(this);
 
@@ -69,6 +73,7 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
 
     @Override
     public void onDestroyView() {
+        mProgressBar.setVisibility(View.GONE);
         mPresenter.onDetach();
         super.onDestroyView();
     }
@@ -77,11 +82,13 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
     public void openMainActivity() {
         Intent intent = MainActivity.getStartIntent(getBaseActivity());
         startActivity(intent);
+        mProgressBar.setVisibility(View.GONE);
         getBaseActivity().finish();
     }
 
     @Override
     public void issueError() {
+        mProgressBar.setVisibility(View.GONE);
         Toast.makeText(getBaseActivity(), "Error creating user. Please retry",
                 Toast.LENGTH_SHORT).show();
     }
@@ -108,6 +115,7 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
                         password,
                         fullName,
                         userName);
+                mProgressBar.setVisibility(View.VISIBLE);
             } else {
                 Log.e(TAG, "onClick: Error creating user");
                 if (!email.contains("@") && email.length() < 4) {

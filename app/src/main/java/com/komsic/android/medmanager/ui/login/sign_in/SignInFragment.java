@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
     private TextInputEditText emailEditText;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
+    private ProgressBar mProgressBar;
 
     public SignInFragment() {
         // Required empty public constructor
@@ -43,6 +45,8 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
         mPresenter = new SignInPresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
 
+        mProgressBar = rootView.findViewById(R.id.progress_bar);
+
         passwordEditText = rootView.findViewById(R.id.password_text_edit);
         emailEditText = rootView.findViewById(R.id.email_text_edit);
         emailInputLayout = rootView.findViewById(R.id.email_text_input);
@@ -58,6 +62,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
 
     @Override
     public void onDestroyView() {
+        mProgressBar.setVisibility(View.GONE);
         mPresenter.onDetach();
         super.onDestroyView();
     }
@@ -85,6 +90,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
                 issueError(false);
 
                 String password = passwordEditText.getText().toString();
+                mProgressBar.setVisibility(View.VISIBLE);
                 mPresenter.signIn(email, password);
                 break;
         }
@@ -100,6 +106,7 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
     @Override
     public void issueError(boolean status) {
         if (status) {
+            mProgressBar.setVisibility(View.GONE);
             emailInputLayout.setError("Email is not valid");
             passwordInputLayout.setError("Or password is incorrect");
         } else {
