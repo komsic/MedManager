@@ -2,6 +2,7 @@ package com.komsic.android.medmanager.data.sync;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -121,6 +122,12 @@ public class SyncAlarmService extends IntentService
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             if (alarmManager != null) {
                 alarmManager.cancel(setUpSyncAlarmPendingIntent());
+            }
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.cancelAll();
             }
         }
     }

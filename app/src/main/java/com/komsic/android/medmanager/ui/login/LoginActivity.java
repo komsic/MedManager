@@ -73,6 +73,13 @@ public class LoginActivity extends BaseActivity implements LogInMvpView {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(SplashActivity.getStartIntent(this));
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
         mPresenter.onDetach();
         super.onDestroy();

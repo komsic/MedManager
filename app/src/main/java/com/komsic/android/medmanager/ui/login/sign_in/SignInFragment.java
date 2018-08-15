@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
 
 public class SignInFragment extends BaseFragment implements SignInMvpView, View.OnClickListener {
+
+    private static final String TAG = "SignInFragment";
 
     private SignInMvpPresenter<SignInFragment> mPresenter;
     private TextInputEditText passwordEditText;
@@ -81,18 +84,18 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
                 }
                 break;
             case R.id.text_login:
-                if (email.length() < 4 && !email.contains("@") &&
-                        passwordEditText.getText().length() > 0) {
-
+                if (email.length() < 4 || !email.contains("@") ||
+                        passwordEditText.getText().length() <= 4) {
+                    Log.e(TAG, "onClick: inside if");
                     issueError(true);
-
                     return;
+                } else {
+                    issueError(false);
+                    Log.e(TAG, "onClick: outside if");
+                    String password = passwordEditText.getText().toString();
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mPresenter.signIn(email, password);
                 }
-                issueError(false);
-
-                String password = passwordEditText.getText().toString();
-                mProgressBar.setVisibility(View.VISIBLE);
-                mPresenter.signIn(email, password);
                 break;
         }
     }
