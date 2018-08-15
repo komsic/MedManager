@@ -50,6 +50,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private List<Med> mMedList;
     private List<Alarm> mAlarmList;
     private AlarmItemEvent mAlarmEvent;
+    private SignOutEvent mSignOutEvent;
 
     private AlarmItemEvent mServiceAlarmEvent;
 
@@ -274,10 +275,17 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         return FirebaseAuth.getInstance().getCurrentUser() == null;
     }
 
+    public void setSignOutEvent(SignOutEvent signOutEvent) {
+        mSignOutEvent = signOutEvent;
+    }
+
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null) {
+            if (mSignOutEvent != null) {
+                mSignOutEvent.onSignOutEventListener();
+            }
             sDataManager = null;
             firebaseAuth.removeAuthStateListener(this);
         }
@@ -365,5 +373,9 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public interface AlarmItemEvent {
         void onAlarmListChanged(List<Alarm> alarms);
+    }
+
+    public interface SignOutEvent {
+        void onSignOutEventListener();
     }
 }

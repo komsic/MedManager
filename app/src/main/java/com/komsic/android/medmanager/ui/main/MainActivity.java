@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.komsic.android.medmanager.R;
@@ -88,6 +89,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         });
 
+        Log.d("Main", "setUp: about to create service");
         startService(SyncAlarmService.getStartIntent(this));
     }
 

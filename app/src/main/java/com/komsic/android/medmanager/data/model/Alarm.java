@@ -79,6 +79,10 @@ public class Alarm implements Comparable<Alarm> {
         return CalendarUtil.convertToTime(timeOfDay);
     }
 
+    public long getTimeFrom00HrsLong() {
+        return CalendarUtil.getCurrentDate00HrsLong(timeOfDay);
+    }
+
     @Override
     public int compareTo(@NonNull Alarm o) {
         return (int) (timeOfDay - o.timeOfDay);

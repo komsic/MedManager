@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.sync.SyncAlarmService;
@@ -22,15 +21,14 @@ import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NO
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "AlarmReceiver";
-
-    private static final int NOTIFICATION_ID = 0;
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ACTION_NOTIFY.equals(intent.getAction())) {
-            Log.e(TAG, "onReceive: ");
+
             ArrayList<String> strings =
                     intent.getStringArrayListExtra(SyncAlarmService.ACTION_NOTIFY_EXTRA);
+            long time = intent.getLongExtra("time", -1);
+
 
             StringBuilder sb = new StringBuilder();
             sb.append("| ");
@@ -45,22 +43,21 @@ public class AlarmReceiver extends BroadcastReceiver {
             //Create the content intent for the notification, which launches this activity
             Intent contentIntent = new Intent(context, MainActivity.class);
             PendingIntent contentPendingIntent = PendingIntent.getActivity
-                    (context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    (context, ((int) time), contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             //Build the notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    //.setSmallIcon(R.drawable.ic_clock)
-                    .setContentTitle("Take your fucking pill")
+                    .setSmallIcon(R.drawable.ic_clock)
+                    .setContentTitle(context.getString(R.string.notification_message))
                     .setContentText(sb.toString())
                     .setContentIntent(contentPendingIntent)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_med_manager_logo)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setDefaults(NotificationCompat.DEFAULT_ALL);
 
             //Deliver the notification
             if (notificationManager != null) {
-                notificationManager.notify(NOTIFICATION_ID, builder.build());
+                notificationManager.notify(((int) time), builder.build());
             }
         }
     }

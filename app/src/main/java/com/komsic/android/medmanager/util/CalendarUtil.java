@@ -17,6 +17,12 @@ public class CalendarUtil {
         return DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date(longDate));
     }
 
+    public static long getCurrentDate00HrsLong(long time) {
+        String currentDate = getDateInString(System.currentTimeMillis());
+
+        return (parseDateFromString(currentDate).getTime() + 3600000L + time);
+    }
+
     public static String getTimeInString(long time) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         return sdf.format(new Date(time));

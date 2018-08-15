@@ -20,85 +20,44 @@ import java.util.List;
  * This class will help to save alarm on Firebase Database
  */
 
-public class SyncAlarmService extends IntentService implements DataManager.AlarmItemEvent {
+public class SyncAlarmService extends IntentService
+        implements DataManager.AlarmItemEvent, DataManager.SignOutEvent {
     private static final String TAG = "SyncAlarmService";
 
     public static final String ACTION_NOTIFY_EXTRA = "com.komsic.android.med_manager.ACTION_NOTIFY.medNames";
 
     public static final String ACTION_NOTIFY = "com.komsic.android.med_manager.ACTION_NOTIFY";
+    public static final String ACTION_SERVICE = "com.komsic.android.med_manager.ACTION_SERVICE";
     private List<Alarm> mAlarmList;
-    private int i;
 
     public SyncAlarmService() {
         super("SyncAlarmService");
         if (DataManager.getInstance() != null) {
             DataManager.getInstance().setServiceAlarmEvent(this);
+            DataManager.getInstance().setSignOutEvent(this);
         }
     }
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, SyncAlarmService.class);
-        intent.setAction(ACTION_NOTIFY);
+        intent.setAction(ACTION_SERVICE);
         return intent;
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (ACTION_NOTIFY.equals(intent.getAction())) {
+        if (intent != null && ACTION_SERVICE.equals(intent.getAction())) {
             if (DataManager.getInstance() != null) {
+                onSignOutEventListener();
+
                 mAlarmList = DataManager.getInstance()
                         .getScheduleListForSelectedDate(CalendarUtil.getCurrentTime());
             }
         }
     }
 
-    public void onAlarmChanged(Alarm alarm) {
-        if (alarm != null) {
-
-            Intent alarmIntent = new Intent(ACTION_NOTIFY);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-            if (alarm.getTimeOfDay() > CalendarUtil.getCurrentTime()) {
-                Log.e(TAG, "onAlarmChanged: " +  alarm.toString());
-
-                ArrayList<String> medNames = new ArrayList<>(alarm.medNames);
-                alarmIntent.putStringArrayListExtra(ACTION_NOTIFY_EXTRA, medNames);
-
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                        i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getTimeOfDay(),
-                        pendingIntent);
-            }
-        }
-    }
-
     @Override
     public void onAlarmListChanged(List<Alarm> alarmList) {
-        int j = 0;
-        for (Alarm a : alarmList) {
-            if (a.getTimeOfDay() > CalendarUtil.getCurrentTimeInTimeInstanceForm()) {
-                Log.e(TAG, "onAlarmListChanged: " + i + " || " + j + " | "
-                        + a.getTimeOfDay() + " | "
-                        + CalendarUtil.getTimeInString(a.getTimeOfDay()) + " | "
-                        + a.medNames);
-
-                Intent alarmIntent = new Intent(ACTION_NOTIFY);
-                alarmIntent.putStringArrayListExtra(ACTION_NOTIFY_EXTRA,
-                        new ArrayList<>(a.medNames));
-
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                        i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        (System.currentTimeMillis() + (j * 60000)),
-                        pendingIntent);
-            }
-            j++;
-        }
-        Log.e(TAG, "onAlarmListChanged: -----------------------------------------------------------------");
-        i++;
 
         if (mAlarmList != null) {
             cancelAllAlarm(mAlarmList);
@@ -111,18 +70,17 @@ public class SyncAlarmService extends IntentService implements DataManager.Alarm
         mAlarmList = alarmList;
     }
 
-    private void cancelAllAlarm(List<Alarm> alarmList) {
-        for (Alarm alarm : alarmList) {
-            cancelAlarm(alarm);
+    @Override
+    public void onSignOutEventListener() {
+        if (mAlarmList != null) {
+            cancelAllAlarm(mAlarmList);
         }
     }
 
-    private void addAlarm(Alarm alarm) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null &&
-                alarm.getTimeOfDay() > CalendarUtil.getCurrentTimeInTimeInstanceForm()) {
-            alarmManager.setExact(AlarmManager.RTC,
-                    alarm.getTimeOfDay(), setPendingIntentForAlarm(alarm));
+    private void cancelAllAlarm(List<Alarm> alarmList) {
+        Log.e(TAG, "cancelAllAlarm: cancelling alarms");
+        for (Alarm alarm : alarmList) {
+            cancelAlarm(alarm);
         }
     }
 
@@ -130,17 +88,33 @@ public class SyncAlarmService extends IntentService implements DataManager.Alarm
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.cancel(setPendingIntentForAlarm(alarm));
+            Log.e(TAG, "cancelAlarm: canceled alarm: " + alarm.getTimeFrom00HrsLong() + " | "
+                    + CalendarUtil.getTimeInString(alarm.getTimeFrom00HrsLong()) + " | "
+                    + alarm.medNames);
         }
     }
 
     private PendingIntent setPendingIntentForAlarm(Alarm alarm) {
         Intent intent = new Intent(ACTION_NOTIFY);
         intent.putStringArrayListExtra(ACTION_NOTIFY_EXTRA, new ArrayList<>(alarm.medNames));
+        intent.putExtra("time", alarm.getTimeOfDay());
 
         return PendingIntent.getBroadcast(
                 getApplicationContext(),
                 ((int) alarm.getTimeOfDay()),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void addAlarm(Alarm alarm) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null && alarm.getTimeFrom00HrsLong() > System.currentTimeMillis()) {
+
+            alarmManager.setExact(AlarmManager.RTC,
+                    alarm.getTimeFrom00HrsLong(), setPendingIntentForAlarm(alarm));
+            Log.e(TAG, "addAlarm: added alarm: " + alarm.getTimeFrom00HrsLong() + " | "
+                    + CalendarUtil.getTimeInString(alarm.getTimeFrom00HrsLong())
+                    + " | " + alarm.medNames);
+        }
     }
 }
