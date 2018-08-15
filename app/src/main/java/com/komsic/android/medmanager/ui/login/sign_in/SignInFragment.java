@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
-import com.komsic.android.medmanager.ui.main.MainActivity;
 
 public class SignInFragment extends BaseFragment implements SignInMvpView, View.OnClickListener {
 
@@ -98,9 +98,10 @@ public class SignInFragment extends BaseFragment implements SignInMvpView, View.
     }
 
     @Override
-    public void openMainActivity() {
-        Intent intent = MainActivity.getStartIntent(getBaseActivity());
-        startActivity(intent);
+    public void openSyncAlarmService() {
+        Intent intent = SyncAlarmService.getStartIntent(getBaseActivity());
+        intent.setAction(SyncAlarmService.ACTION_SERVICE);
+        getBaseActivity().startService(intent);
         getBaseActivity().finish();
     }
 

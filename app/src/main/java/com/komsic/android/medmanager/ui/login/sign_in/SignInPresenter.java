@@ -16,11 +16,6 @@ public class SignInPresenter<V extends SignInMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void openMainActivity() {
-        getMvpView().openMainActivity();
-    }
-
-    @Override
     public void onForgotPasswordClicked(String email) {
         if (!getDataManager().onForgotPasswordClicked(email)) {
             getMvpView().issueForgottenEmailError();
@@ -35,7 +30,7 @@ public class SignInPresenter<V extends SignInMvpView> extends BasePresenter<V>
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
         if (task.isSuccessful()) {
-            getMvpView().openMainActivity();
+            getMvpView().openSyncAlarmService();
         } else {
             getMvpView().issueError(true);
         }

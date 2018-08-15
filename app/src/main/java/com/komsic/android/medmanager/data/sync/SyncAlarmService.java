@@ -10,14 +10,17 @@ import android.util.Log;
 
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;
+import com.komsic.android.medmanager.ui.main.MainActivity;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by komsic on 4/2/2018.
- * This class will help to save alarm on Firebase Database
  */
 
 public class SyncAlarmService extends IntentService
@@ -25,9 +28,11 @@ public class SyncAlarmService extends IntentService
     private static final String TAG = "SyncAlarmService";
 
     public static final String ACTION_NOTIFY_EXTRA = "com.komsic.android.med_manager.ACTION_NOTIFY.medNames";
-
     public static final String ACTION_NOTIFY = "com.komsic.android.med_manager.ACTION_NOTIFY";
     public static final String ACTION_SERVICE = "com.komsic.android.med_manager.ACTION_SERVICE";
+    public static final String ACTION_INIT_SYNC_ALARM = "com.komsic.android.med_manager.ACTION_INIT_SYNC_ALARM";
+    public static final String ACTION_SET__SYNC_ALARM = "com.komsic.android.med_manager.ACTION_SET__SYNC_ALARM";
+
     private List<Alarm> mAlarmList;
 
     public SyncAlarmService() {
@@ -39,21 +44,59 @@ public class SyncAlarmService extends IntentService
     }
 
     public static Intent getStartIntent(Context context) {
-        Intent intent = new Intent(context, SyncAlarmService.class);
-        intent.setAction(ACTION_SERVICE);
-        return intent;
+        return new Intent(context, SyncAlarmService.class);
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent != null && ACTION_SERVICE.equals(intent.getAction())) {
-            if (DataManager.getInstance() != null) {
-                onSignOutEventListener();
-
+        if (intent != null) {
+            if (ACTION_SERVICE.equals(intent.getAction())) {
+                setUpSyncAlarmTrigger();
+                openMainActivity();
+            } else if (ACTION_SET__SYNC_ALARM.equals(intent.getAction())) {
                 mAlarmList = DataManager.getInstance()
-                        .getScheduleListForSelectedDate(CalendarUtil.getCurrentTime());
+                        .getScheduleListForSelectedDate(System.currentTimeMillis());
+
+                onAlarmListChanged(mAlarmList);
             }
         }
+    }
+
+    private void setUpSyncAlarmTrigger() {
+        PendingIntent pendingIntent = setUpSyncAlarmPendingIntent();
+
+        Calendar currentDateCalendar = Calendar.getInstance();
+        currentDateCalendar.set(Calendar.HOUR, 0);
+        currentDateCalendar.set(Calendar.MINUTE, 0);
+        currentDateCalendar.set(Calendar.SECOND, 0);
+        currentDateCalendar.set(Calendar.AM_PM, Calendar.AM);
+
+        long time = currentDateCalendar.getTimeInMillis();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC,
+                    time,
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent);
+        }
+    }
+
+    private void openMainActivity() {
+        Intent intent = MainActivity.getStartIntent(this);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private PendingIntent setUpSyncAlarmPendingIntent() {
+        Intent intent = new Intent(ACTION_INIT_SYNC_ALARM);
+
+        int ALARM_ID = 500;
+        return PendingIntent.getBroadcast(
+                getApplicationContext(),
+                ALARM_ID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
@@ -74,11 +117,15 @@ public class SyncAlarmService extends IntentService
     public void onSignOutEventListener() {
         if (mAlarmList != null) {
             cancelAllAlarm(mAlarmList);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            if (alarmManager != null) {
+                alarmManager.cancel(setUpSyncAlarmPendingIntent());
+            }
         }
     }
 
     private void cancelAllAlarm(List<Alarm> alarmList) {
-        Log.e(TAG, "cancelAllAlarm: cancelling alarms");
         for (Alarm alarm : alarmList) {
             cancelAlarm(alarm);
         }
@@ -108,7 +155,7 @@ public class SyncAlarmService extends IntentService
 
     private void addAlarm(Alarm alarm) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null && alarm.getTimeFrom00HrsLong() > System.currentTimeMillis()) {
+        if (alarmManager != null && alarm.getTimeFrom00HrsLong() >= (System.currentTimeMillis() - 60000)) {
 
             alarmManager.setExact(AlarmManager.RTC,
                     alarm.getTimeFrom00HrsLong(), setPendingIntentForAlarm(alarm));

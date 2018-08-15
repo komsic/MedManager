@@ -5,7 +5,7 @@ import com.komsic.android.medmanager.ui.base.MvpView;
 
 public interface SignInMvpView extends MvpView {
 
-    void openMainActivity();
+    void openSyncAlarmService();
 
     BaseActivity getBaseActivity();
 

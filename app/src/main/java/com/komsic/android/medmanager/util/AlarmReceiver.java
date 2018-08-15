@@ -13,13 +13,18 @@ import com.komsic.android.medmanager.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
+import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_INIT_SYNC_ALARM;
 import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_NOTIFY;
+import static com.komsic.android.medmanager.data.sync.SyncAlarmService.ACTION_SET__SYNC_ALARM;
+import static com.komsic.android.medmanager.data.sync.SyncAlarmService.getStartIntent;
 
 /**
  * Created by komsic on 4/15/2018.
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    private static final String TAG = "AlarmReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -59,6 +64,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             if (notificationManager != null) {
                 notificationManager.notify(((int) time), builder.build());
             }
+        } else if (ACTION_INIT_SYNC_ALARM.equals(intent.getAction())) {
+            Intent syncServiceIntent = getStartIntent(context);
+            syncServiceIntent.setAction(ACTION_SET__SYNC_ALARM);
+            context.startService(syncServiceIntent);
         }
     }
 }

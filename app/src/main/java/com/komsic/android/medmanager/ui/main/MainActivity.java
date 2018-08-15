@@ -10,12 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
-import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
@@ -23,6 +21,8 @@ import com.komsic.android.medmanager.ui.main.schedule.MedScheduleFragment;
 import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
+
+    private static final String TAG = "MainActivity";
 
     private MainMvpPresenter<MainMvpView> mPresenter;
     private TabLayout tabLayout;
@@ -88,9 +88,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mPresenter.openAddMedDialog();
             }
         });
-
-        Log.d("Main", "setUp: about to create service");
-        startService(SyncAlarmService.getStartIntent(this));
     }
 
     @Override
