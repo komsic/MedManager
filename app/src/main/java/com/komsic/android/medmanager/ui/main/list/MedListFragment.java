@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -127,17 +129,36 @@ public class MedListFragment extends BaseFragment implements
         if (isAdapterSetUp) {
             mAdapter.notifyDataSetChanged();
         } else {
+            isAdapterSetUp = true;
             mAdapter = new MedListAdapter(getContext(), this, newMedList);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(mAdapter);
-            isAdapterSetUp = true;
+
+            ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                    ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    mPresenter.removeMed(viewHolder.getAdapterPosition());
+                }
+            });
+            helper.attachToRecyclerView(recyclerView);
         }
-//        mAdapter.addMedList(newMedList);
     }
 
     @Override
     public void updateMedAtIndexAt(int indexToBeChanged) {
         mAdapter.notifyItemChanged(indexToBeChanged);
+    }
+
+    @Override
+    public void notifyMedRemoved(int position) {
+        Toast.makeText(getBaseActivity(), "Med deleted", Toast.LENGTH_SHORT).show();
+        mAdapter.notifyItemRemoved(position);
     }
 
     @Override

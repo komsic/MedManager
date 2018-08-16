@@ -68,20 +68,27 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
     public void onMedAdded() {
         if (getDataManager().getMed() != null) {
             Med med = getDataManager().getMed();
-            getMvpView().setText(med.name, DetailActivity.MED_NAME_TEXT);
-            getMvpView().setText(med.description, DetailActivity.MED_DESCRIPTION_TEXT);
-            getMvpView().setText(CalendarUtil.getDateInString(med.startDate),
-                    DetailActivity.START_DAY_TEXT);
-            getMvpView().setText(CalendarUtil.getDateInString(med.endDate), DetailActivity.END_DAY_TEXT);
+            if (med != null && getMvpView() != null) {
+                getMvpView().setText(med.name, DetailActivity.MED_NAME_TEXT);
+                getMvpView().setText(med.description, DetailActivity.MED_DESCRIPTION_TEXT);
+                getMvpView().setText(CalendarUtil.getDateInString(med.startDate),
+                        DetailActivity.START_DAY_TEXT);
+                getMvpView().setText(CalendarUtil.getDateInString(med.endDate), DetailActivity.END_DAY_TEXT);
 
-            for (Reminder rem : med.reminders) {
-                getMvpView().updateReminderList(rem);
+                for (Reminder rem : med.reminders) {
+                    getMvpView().updateReminderList(rem);
+                }
             }
         }
     }
 
     @Override
     public void onMedChanged(int indexToBeChanged) {
+
+    }
+
+    @Override
+    public void onMedRemoved(int indexDeleted) {
 
     }
 

@@ -1,6 +1,7 @@
 package com.komsic.android.medmanager.data;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -128,10 +129,9 @@ public class DataManager implements ValueEventListener, ChildEventListener,
             if (index != -1) {
                 mMedList.get(index).update(med);
 
-
-                if (mMedEventListener != null) {
-                    mMedEventListener.onMedChanged(index);
-                }
+//                if (mMedEventListener != null) {
+//                    mMedEventListener.onMedChanged(index);
+//                }
 
                 if (mAlarmEvent != null) {
                     mAlarmEvent.onAlarmListChanged(null);
@@ -146,7 +146,24 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
+        if (dataSnapshot != null) {
+            Med removedMed = dataSnapshot.getValue(Med.class);
 
+            //noinspection ConstantConditions
+            int indexDeleted = Med.get(mMedList, removedMed.id);
+
+            mMedList.remove(indexDeleted);
+
+            if (mMedEventListener != null) {
+                mMedEventListener.onMedRemoved(indexDeleted);
+            }
+
+            if (mAlarmEvent != null) {
+                mAlarmEvent.onAlarmListChanged(null);
+            }
+
+            processAlarm();
+        }
     }
 
     @Override
@@ -235,6 +252,15 @@ public class DataManager implements ValueEventListener, ChildEventListener,
                 .getKey();
         databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList" + "/" + newMed.id)
                 .setValue(newMed);
+    }
+
+    public void removeMed(int position) {
+        Med deletedMed = mMedList.get(position);
+        Log.e(TAG, "removeMed: " + position + " | " + deletedMed);
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList/" +
+                deletedMed.id).removeValue().isSuccessful();
     }
 
     public void fetchCurrentUser() {
@@ -398,7 +424,9 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
             mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/" +
                     mCurrentUser.getUid() + "/userMedList/" + medToBeUpdated.id);
-            mDatabaseReference.updateChildren(medToBeUpdated.toMap());
+            if (mDatabaseReference.updateChildren(medToBeUpdated.toMap()).isSuccessful()) {
+                mMedEventListener.onMedChanged(position);
+            }
         }
     }
 
@@ -406,6 +434,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         void onMedAdded();
 
         void onMedChanged(int indexToBeChanged);
+
+        void onMedRemoved(int indexDeleted);
     }
 
     public interface AlarmItemEvent {

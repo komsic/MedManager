@@ -73,19 +73,21 @@ public class DetailActivity extends BaseActivity implements DetailMvpView,
 
     @Override
     public void setText(String text, int whichTextView) {
-        switch (whichTextView) {
-            case MED_NAME_TEXT:
-                medNameText.setText(text);
-                break;
-            case MED_DESCRIPTION_TEXT:
-                medDescriptionText.setText(text);
-                break;
-            case START_DAY_TEXT:
-                startDayText.setText(text);
-                break;
-            case END_DAY_TEXT:
-                endDayText.setText(text);
-                break;
+        if (text != null) {
+            switch (whichTextView) {
+                case MED_NAME_TEXT:
+                    medNameText.setText(text);
+                    break;
+                case MED_DESCRIPTION_TEXT:
+                    medDescriptionText.setText(text);
+                    break;
+                case START_DAY_TEXT:
+                    startDayText.setText(text);
+                    break;
+                case END_DAY_TEXT:
+                    endDayText.setText(text);
+                    break;
+            }
         }
     }
 

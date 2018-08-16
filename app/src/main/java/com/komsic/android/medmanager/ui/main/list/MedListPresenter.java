@@ -1,5 +1,7 @@
 package com.komsic.android.medmanager.ui.main.list;
 
+import android.util.Log;
+
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.ui.base.BasePresenter;
 
@@ -12,7 +14,7 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
 
     private static final String TAG = "MedListPresenter";
 
-    public MedListPresenter(DataManager dataManager){
+    MedListPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -25,6 +27,12 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
     public void signOut() {
         getDataManager().signOut();
         getMvpView().onSignOutDone();
+    }
+
+    @Override
+    public void removeMed(int position) {
+        Log.e(TAG, "removeMed: " + position);
+        getDataManager().removeMed(position);
     }
 
     @Override
@@ -44,5 +52,11 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
     @Override
     public void onMedChanged(int indexToBeChanged) {
         getMvpView().updateMedAtIndexAt(indexToBeChanged);
+    }
+
+    @Override
+    public void onMedRemoved(int indexDeleted) {
+        Log.e(TAG, "onMedRemoved: " + indexDeleted);
+        getMvpView().notifyMedRemoved(indexDeleted);
     }
 }

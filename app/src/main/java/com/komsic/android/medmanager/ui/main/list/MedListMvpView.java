@@ -15,4 +15,6 @@ public interface MedListMvpView extends MvpView {
     void onSignOutDone();
 
     void updateMedAtIndexAt(int indexToBeChanged);
+
+    void notifyMedRemoved(int position);
 }

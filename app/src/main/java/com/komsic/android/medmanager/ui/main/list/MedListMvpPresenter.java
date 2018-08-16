@@ -12,4 +12,6 @@ public interface MedListMvpPresenter<V extends MedListMvpView>
     void onViewPrepared();
 
     void signOut();
+
+    void removeMed(int position);
 }
