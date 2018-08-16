@@ -15,7 +15,8 @@ import java.util.Map;
  * Created by komsic on 4/12/2018.
  */
 
-public class Med implements Comparable<Med>{
+public class Med implements Comparable<Med> {
+    private static final String TAG = "Med";
     public String name;
     public String description;
     public String id;
@@ -120,5 +121,17 @@ public class Med implements Comparable<Med>{
 
     public void updateReminderTime(int reminderPosition, long timeInMillis) {
         getReminder(reminderPosition).setTimeOfDay(timeInMillis);
+    }
+
+    public static int get(List<Med> medList, String medId) {
+
+        for (int i = 0; i < medList.size(); i++) {
+            Med med = medList.get(i);
+            if (med.id.equals(medId)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

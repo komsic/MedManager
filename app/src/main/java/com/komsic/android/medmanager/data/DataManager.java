@@ -122,14 +122,25 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         if (dataSnapshot != null) {
             Med med = dataSnapshot.getValue(Med.class);
 
-            int updatedMedIndex = mMedList.indexOf(med);
-            mMedList.get(updatedMedIndex).update(med);
+            //noinspection ConstantConditions
+            int index = Med.get(mMedList, med.id);
 
-            if (mAlarmEvent != null) {
-                mAlarmEvent.onAlarmListChanged(null);
+            if (index != -1) {
+                mMedList.get(index).update(med);
+
+
+                if (mMedEventListener != null) {
+                    mMedEventListener.onMedChanged(index);
+                }
+
+                if (mAlarmEvent != null) {
+                    mAlarmEvent.onAlarmListChanged(null);
+                }
+
+                processAlarm();
+            } else {
+                throw new UnsupportedOperationException("Med not present");
             }
-
-            processAlarm();
         }
     }
 
@@ -367,8 +378,34 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mMed.updateReminderTime(reminderPosition, timeInMillis);
     }
 
+    public Med getMedFromList(int position) {
+        Med med = null;
+        if (mMedList != null && mMedList.size() > position) {
+            med = mMedList.get(position);
+        }
+        return med;
+    }
+
+    public void updateMed(int position, String name, String description,
+                          long startTime, long endTime) {
+
+        if (mMedList != null && mMedList.size() > position) {
+            Med medToBeUpdated = mMedList.get(position);
+            medToBeUpdated.name = name;
+            medToBeUpdated.description = description;
+            medToBeUpdated.startDate = startTime;
+            medToBeUpdated.endDate = endTime;
+
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/" +
+                    mCurrentUser.getUid() + "/userMedList/" + medToBeUpdated.id);
+            mDatabaseReference.updateChildren(medToBeUpdated.toMap());
+        }
+    }
+
     public interface MedEventListener{
         void onMedAdded();
+
+        void onMedChanged(int indexToBeChanged);
     }
 
     public interface AlarmItemEvent {

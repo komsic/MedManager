@@ -19,14 +19,29 @@ public class AddMedDialogPresenter<V extends AddMedDialogMvpView> extends BasePr
     }
 
     @Override
-    public void onDoneClicked(String name, String description, long startTime, long endTime) {
-        addNewMed(name, description, startTime, endTime);
+    public void onDoneClicked(boolean isEdit, int position, String name, String description,
+                              long startTime, long endTime) {
+        if (isEdit) {
+            updateMed(position, name, description, startTime, endTime);
+        } else {
+            addNewMed(name, description, startTime, endTime);
+        }
+    }
+
+    private void updateMed(int position, String name, String description,
+                           long startTime, long endTime) {
+        getDataManager().updateMed(position, name, description, startTime, endTime);
     }
 
 
     @Override
     public void onDismiss() {
         getMvpView().dismissDialog();
+    }
+
+    @Override
+    public void initView(int position) {
+        getMvpView().initView(getDataManager().getMedFromList(position), position);
     }
 
     private void addNewMed(String name, String description, long startTime, long endTime) {

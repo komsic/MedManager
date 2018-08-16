@@ -7,7 +7,9 @@ import com.komsic.android.medmanager.ui.base.MvpPresenter;
  */
 
 public interface AddMedDialogMvpPresenter<V extends AddMedDialogMvpView> extends MvpPresenter<V> {
-    void onDoneClicked(String name, String description, long startTime, long endTime);
+    void onDoneClicked(boolean isEdit, int position, String name, String description, long startTime, long endTime);
 
     void onDismiss();
+
+    void initView(int position);
 }

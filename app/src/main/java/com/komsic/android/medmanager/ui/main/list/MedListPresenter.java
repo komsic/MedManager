@@ -40,4 +40,9 @@ public class MedListPresenter<V extends MedListMvpView> extends BasePresenter<V>
             getMvpView().updateList(getDataManager().getMedList());
         }
     }
+
+    @Override
+    public void onMedChanged(int indexToBeChanged) {
+        getMvpView().updateMedAtIndexAt(indexToBeChanged);
+    }
 }

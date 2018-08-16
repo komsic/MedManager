@@ -20,6 +20,7 @@ import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
 import com.komsic.android.medmanager.ui.main.MainActivity;
+import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 
 import java.util.List;
 
@@ -30,13 +31,15 @@ import static android.content.Context.SEARCH_SERVICE;
  */
 
 public class MedListFragment extends BaseFragment implements
-        MedListMvpView {
+        MedListMvpView, MedListAdapter.ItemInteractionListener {
 
     private static final String TAG = "MedListFragment";
 
     private MedListAdapter mAdapter;
     private MedListMvpPresenter<MedListMvpView> mPresenter;
     private ProgressBar mProgressBar;
+    private RecyclerView recyclerView;
+    private boolean isAdapterSetUp;
 
     public static MedListFragment newInstance() {
         Bundle args = new Bundle();
@@ -55,12 +58,9 @@ public class MedListFragment extends BaseFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_med_list, container, false);
-        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
+        recyclerView = rootView.findViewById(R.id.recycler_view);
+        isAdapterSetUp = false;
         mProgressBar = rootView.findViewById(R.id.progress_bar);
-
-        mAdapter = new MedListAdapter(getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter);
 
         mPresenter = new MedListPresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
@@ -70,8 +70,10 @@ public class MedListFragment extends BaseFragment implements
     }
 
     @Override
-    public void updateList(List<Med> newMedList) {
-        mAdapter.addMedList(newMedList);
+    public void onDestroyView() {
+        mAdapter.removeListener();
+        mPresenter.onDetach();
+        super.onDestroyView();
     }
 
     @Override
@@ -104,9 +106,6 @@ public class MedListFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.action_sort:
                 mAdapter.sortMedList();
-//                FirebaseAuth.getInstance().signOut();
-//                getBaseActivity().startActivity(SplashActivity.getStartIntent(getBaseActivity()));
-//                getBaseActivity().finish();
                 return true;
             case R.id.action_sign_out:
                 mPresenter.signOut();
@@ -124,8 +123,26 @@ public class MedListFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDestroyView() {
-        mPresenter.onDetach();
-        super.onDestroyView();
+    public void updateList(List<Med> newMedList) {
+        if (isAdapterSetUp) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            mAdapter = new MedListAdapter(getContext(), this, newMedList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(mAdapter);
+            isAdapterSetUp = true;
+        }
+//        mAdapter.addMedList(newMedList);
+    }
+
+    @Override
+    public void updateMedAtIndexAt(int indexToBeChanged) {
+        mAdapter.notifyItemChanged(indexToBeChanged);
+    }
+
+    @Override
+    public void onEditClicked(int position) {
+        AddMedDialog dialogAddMed = AddMedDialog.newInstance(position, true);
+        dialogAddMed.show(getBaseActivity().getSupportFragmentManager(), "DialogAddMed");
     }
 }

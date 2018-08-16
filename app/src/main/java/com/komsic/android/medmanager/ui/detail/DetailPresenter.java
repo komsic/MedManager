@@ -81,6 +81,11 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void onMedChanged(int indexToBeChanged) {
+
+    }
+
+    @Override
     public void onDetach() {
         getDataManager().removeListener(DataManager.VALUE_EVENT_LISTENER);
         super.onDetach();

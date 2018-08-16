@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.BaseDialog;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
@@ -26,22 +28,40 @@ import static com.komsic.android.medmanager.util.CalendarUtil.parseDateFromStrin
  */
 
 public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
+    private static final String TAG = "AddMedDialog";
+
+    private static final String POSITION = "index";
+    private static final String EDIT_STATUS = "isEdit";
 
     private EditText mEditName, mEditDescription, mEditStartDate, mEditEndDate;
     private Calendar mCalendar;
+    private int mPosition;
+    private boolean mIsEdit;
 
-    AddMedDialogMvpPresenter<AddMedDialogMvpView> mPresenter;
+    private AddMedDialogMvpPresenter<AddMedDialogMvpView> mPresenter;
 
-    public static AddMedDialog newInstance() {
+    public static AddMedDialog newInstance(int position, boolean isEdit) {
         AddMedDialog fragment = new AddMedDialog();
         Bundle bundle = new Bundle();
+        bundle.putInt(POSITION, position);
+        bundle.putBoolean(EDIT_STATUS, isEdit);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPosition = getArguments().getInt(POSITION, -1);
+            mIsEdit = getArguments().getBoolean(EDIT_STATUS, false);
+        }
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
         View dialogView = getBaseActivity().getLayoutInflater().inflate(R.layout.dialog_add_med, null);
         builder.setView(dialogView);
@@ -63,7 +83,8 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
             @Override
             public void onClick(View v) {
                 //Add a new med
-                mPresenter.onDoneClicked(mEditName.getText().toString(),
+                mPresenter.onDoneClicked(mIsEdit, mPosition,
+                        mEditName.getText().toString(),
                         mEditDescription.getText().toString(),
                         parseDateFromString(mEditStartDate.getText().toString()).getTime(),
                         parseDateFromString(mEditEndDate.getText().toString()).getTime());
@@ -79,6 +100,11 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
                 mPresenter.onDismiss();
             }
         });
+
+        if (mIsEdit) {
+            mPresenter.initView(mPosition);
+        }
+
         return builder.create();
     }
 
@@ -117,6 +143,14 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
     @Override
     public FragmentActivity getContext() {
         return getActivity();
+    }
+
+    @Override
+    public void initView(Med medFromList, int position) {
+        mEditName.setText(medFromList.name);
+        mEditDescription.setText(medFromList.description);
+        mEditStartDate.setText(CalendarUtil.getDateInString(medFromList.startDate));
+        mEditEndDate.setText(CalendarUtil.getDateInString(medFromList.endDate));
     }
 
     @Override

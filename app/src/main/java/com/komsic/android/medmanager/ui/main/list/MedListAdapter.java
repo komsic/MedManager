@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
@@ -29,14 +30,16 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
 
     private static final String TAG = "MedListAdapter";
     private final Context mContext;
-    private ArrayList<Med> mMedList;
-    private ArrayList<Med> filteredList;
+    private List<Med> mMedList;
+    private List<Med> filteredList;
     private MedFilter mMedFilter;
+    private ItemInteractionListener mListener;
 
-    public MedListAdapter(Context context) {
+    public MedListAdapter(Context context, ItemInteractionListener listener, List<Med> meds) {
         this.mContext = context;
-        mMedList = new ArrayList<>();
+        mMedList = meds;
         filteredList = mMedList;
+        mListener = listener;
     }
 
     @NonNull
@@ -49,6 +52,7 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
 
     @Override
     public void onBindViewHolder(@NonNull MedListViewHolder holder, int position) {
+        final int index = position;
         final Med currentMed = filteredList.get(position);
 
         holder.textMedName.setText(currentMed.name);
@@ -70,17 +74,25 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
             }
         });
 
+        holder.editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onEditClicked(index);
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return filteredList.size();
+        return filteredList == null ? 0 : filteredList.size();
     }
 
     public void addMedList(List<Med> newMedList) {
         if (newMedList != null) {
             mMedList.clear();
             mMedList.addAll(newMedList);
+
             filteredList = mMedList;
             notifyItemInserted(filteredList.size() - 1);
         }
@@ -100,18 +112,12 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
         return mMedFilter;
     }
 
-    class MedListViewHolder extends RecyclerView.ViewHolder {
-        TextView textMedName;
-        TextView textStartDate;
-        TextView textEndDate;
+    public void removeListener() {
+        mListener = null;
+    }
 
-        MedListViewHolder(View itemView) {
-            super(itemView);
-
-            textMedName = itemView.findViewById(R.id.text_item_list_med_name);
-            textStartDate = itemView.findViewById(R.id.text_start_date);
-            textEndDate = itemView.findViewById(R.id.text_end_date);
-        }
+    public interface ItemInteractionListener {
+        void onEditClicked(int position);
     }
 
     public class MedFilter extends Filter {
@@ -144,6 +150,22 @@ public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListV
             filteredList = (ArrayList<Med>) results.values;
 
             notifyDataSetChanged();
+        }
+    }
+
+    class MedListViewHolder extends RecyclerView.ViewHolder {
+        TextView textMedName;
+        TextView textStartDate;
+        TextView textEndDate;
+        ImageView editImage;
+
+        MedListViewHolder(View itemView) {
+            super(itemView);
+
+            textMedName = itemView.findViewById(R.id.text_item_list_med_name);
+            textStartDate = itemView.findViewById(R.id.text_start_date);
+            textEndDate = itemView.findViewById(R.id.text_end_date);
+            editImage = itemView.findViewById(R.id.edit_image);
         }
     }
 }

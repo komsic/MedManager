@@ -13,4 +13,6 @@ public interface MedListMvpView extends MvpView {
     void updateList(List<Med> newMedList);
 
     void onSignOutDone();
+
+    void updateMedAtIndexAt(int indexToBeChanged);
 }
