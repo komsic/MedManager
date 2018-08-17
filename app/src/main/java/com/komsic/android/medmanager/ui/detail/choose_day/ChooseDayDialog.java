@@ -6,11 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.model.Reminder;
 import com.komsic.android.medmanager.ui.base.BaseDialog;
 
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ChooseDayDialog extends BaseDialog implements ChooseDayDialogMvpVie
         satTextView = dialogView.findViewById(R.id.text_sat);
         sunTextView = dialogView.findViewById(R.id.text_sun);
 
-        FrameLayout cancelLayout = dialogView.findViewById(R.id.frame_cancel);
+        ImageButton cancelLayout = dialogView.findViewById(R.id.frame_cancel);
         cancelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +56,7 @@ public class ChooseDayDialog extends BaseDialog implements ChooseDayDialogMvpVie
             }
         });
 
-        FrameLayout doneLayout = dialogView.findViewById(R.id.frame_done);
+        ImageButton doneLayout = dialogView.findViewById(R.id.frame_done);
         doneLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +76,7 @@ public class ChooseDayDialog extends BaseDialog implements ChooseDayDialogMvpVie
         for (int dayOfTheWeek = 0; dayOfTheWeek < dayTextViews.length; dayOfTheWeek++) {
             final TextView dayTextView = dayTextViews[dayOfTheWeek];
             final int dayOfTheWeek1 = dayOfTheWeek;
-            if (dayStateMap.get(DataManager.daysOfTheWeek[dayOfTheWeek1])) {
+            if (dayStateMap.get(Reminder.daysOfTheWeek[dayOfTheWeek1])) {
                 dayTextView.setBackground(ResourcesCompat.getDrawable(getResources(),
                         R.drawable.day_select, null));
             } else {

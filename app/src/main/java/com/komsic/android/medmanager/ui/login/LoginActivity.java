@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -66,11 +65,6 @@ public class LoginActivity extends BaseActivity implements LogInMvpView {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("", "onStart: user is signed in " + mPresenter.isUserSignedIn());
-    }
 
     @Override
     public void onBackPressed() {

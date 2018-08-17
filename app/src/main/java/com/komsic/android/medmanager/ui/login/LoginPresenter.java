@@ -14,9 +14,4 @@ public class LoginPresenter<V extends LogInMvpView> extends BasePresenter<V>
     public void attachFragment(int whichFragment) {
         getMvpView().attachFragment(whichFragment);
     }
-
-    @Override
-    public boolean isUserSignedIn() {
-        return getDataManager().isUserSignedIn();
-    }
 }

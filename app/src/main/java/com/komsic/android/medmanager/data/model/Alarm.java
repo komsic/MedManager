@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.Exclude;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,8 +20,6 @@ public class Alarm implements Comparable<Alarm> {
         this.timeOfDay = CalendarUtil.convertToTime(timeOfDay);
         this.medNames = medNames;
     }
-
-    public Alarm() {}
 
     @Exclude
     @Override
@@ -47,32 +43,6 @@ public class Alarm implements Comparable<Alarm> {
             }
         }
         return CalendarUtil.getTimeInString(timeOfDay) + " || " + sb.toString(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("timeOfDay", timeOfDay);
-        result.put("medNames", medNames);
-
-        return result;
-    }
-
-    @Exclude
-    public Alarm getAlarmOfSameTimeFromList(Set<Alarm> alarmList) {
-        for (Alarm alarm : alarmList) {
-            if (timeOfDay == alarm.timeOfDay) {
-                return alarm;
-            }
-        }
-        return null;
-    }
-
-    @Exclude
-    public void addMedName(String s) {
-        if (!medNames.contains(s)) {
-            medNames.add(s);
-        }
     }
 
     public long getTimeOfDay() {

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.komsic.android.medmanager.ui.base.BaseFragment;
 import com.komsic.android.medmanager.ui.main.MainActivity;
 
 public class NewUserFragment extends BaseFragment implements NewUserMvpView, View.OnClickListener {
-    private static final String TAG = "NewUserFragment";
 
     private NewUserMvpPresenter<NewUserMvpView> mPresenter;
 
@@ -126,7 +124,6 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
                         userName);
                 mProgressBar.setVisibility(View.VISIBLE);
             } else {
-                Log.e(TAG, "onClick: Error creating user");
                 if (!email.contains("@") && email.length() < 4) {
                     emailInputLayout.setError("Email is not valid");
                 } else {

@@ -51,42 +51,6 @@ public class AlarmList {
         getNameSet(alarm.time).add(alarm.medName);
     }
 
-    public void removeAlarmItems(List<AlarmItem> alarms) {
-        for (AlarmItem alarm : alarms) {
-            if (isTimeAlreadyAdded(alarm.time)) {
-                if (getNameSet(alarm.time).size() == 1) {
-                    alarmList.remove(alarm.time);
-                } else {
-                    removeMedNameToSet(alarm);
-                }
-            }
-        }
-    }
-
-    private void removeMedNameToSet(AlarmItem alarm) {
-        getNameSet(alarm.time).remove(alarm.medName);
-    }
-
-    public void changeAlarmItemTime(AlarmItem alarm, long newTime) {
-        if (isTimeAlreadyAdded(alarm.time)) {
-            if (getNameSet(alarm.time).size() == 1) {
-                Set<String> medNames = getNameSet(alarm.time);
-                alarmList.remove(alarm.time);
-
-                alarmList.put(newTime, medNames);
-            } else {
-                removeMedNameToSet(alarm);
-
-                alarm.time = newTime;
-                addAlarmItem(alarm);
-            }
-        }
-    }
-
-    public void clear() {
-        alarmList.clear();
-    }
-
     public List<Alarm> getAlarmList() {
         List<Alarm> alarms = new ArrayList<>();
         for (long timeKey : alarmList.keySet()) {

@@ -26,7 +26,6 @@ import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,11 +40,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public static final int VALUE_EVENT_LISTENER = 1;
     public static final int CHILD_EVENT_LISTENER = 2;
-    public static String[] daysOfTheWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
-
     private static DataManager sDataManager;
 
-    private Map<String, Boolean> mDayStateMap;
     private List<Med> mMedList;
     private List<Alarm> mAlarmList;
 
@@ -70,11 +66,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private DataManager() {
         mMedList = new ArrayList<>();
         mAlarmList = new ArrayList<>();
-        mDayStateMap = new HashMap<>();
-
-        for (String dayState : daysOfTheWeek) {
-            mDayStateMap.put(dayState, true);
-        }
 
         mMed = new Med();
 
@@ -85,16 +76,8 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         return mMed.getDayStateMap(reminderPosition);
     }
 
-    public void setDayStateMap(Map<String, Boolean> dayStateMap) {
-        mDayStateMap = dayStateMap;
-    }
-
     public Med getMed() {
         return mMed;
-    }
-
-    public void setMed(Med med) {
-        mMed = med;
     }
 
     @Override
@@ -260,7 +243,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList/" +
-                deletedMed.id).removeValue().isSuccessful();
+                deletedMed.id).removeValue();
     }
 
     public void fetchCurrentUser() {
@@ -306,10 +289,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         FirebaseAuth.getInstance()
                 .signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, onCompleteListener);
-    }
-
-    public boolean isUserSignedIn() {
-        return FirebaseAuth.getInstance().getCurrentUser() == null;
     }
 
     public void setSignOutEvent(SignOutEvent signOutEvent) {

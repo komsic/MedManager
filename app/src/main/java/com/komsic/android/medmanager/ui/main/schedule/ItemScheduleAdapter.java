@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ItemScheduleAdapter extends
         RecyclerView.Adapter<ItemScheduleAdapter.ItemScheduleViewHolder> {
-    private static final String TAG = "ItemScheduleAdapter";
 
     private List<String> medNames;
 
@@ -45,7 +44,7 @@ public class ItemScheduleAdapter extends
     class ItemScheduleViewHolder extends RecyclerView.ViewHolder {
         CheckBox scheduleCheckBox;
 
-        public ItemScheduleViewHolder(View itemView) {
+        ItemScheduleViewHolder(View itemView) {
             super(itemView);
 
             scheduleCheckBox = itemView.findViewById(R.id.checkbox);

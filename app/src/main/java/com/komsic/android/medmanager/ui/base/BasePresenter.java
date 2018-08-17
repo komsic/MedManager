@@ -7,7 +7,6 @@ import com.komsic.android.medmanager.data.DataManager;
  */
 
 public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
-    private static final String TAG = "BasePresenter";
 
     private final DataManager mDataManager;
     private V mMvpView;
@@ -26,11 +25,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         mMvpView = null;
     }
 
-    public boolean isViewAttached() {
+    private boolean isViewAttached() {
         return mMvpView != null;
     }
 
-    public V getMvpView() {
+    protected V getMvpView() {
         return mMvpView;
     }
 
@@ -38,12 +37,12 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         if (!isViewAttached()) throw new MvpViewNotAttachedException();
     }
 
-    public DataManager getDataManager() {
+    protected DataManager getDataManager() {
         return mDataManager;
     }
 
     public static class MvpViewNotAttachedException extends RuntimeException {
-        public MvpViewNotAttachedException() {
+        MvpViewNotAttachedException() {
             super("Please call Presenter.onAttach(MvpView) before" +
                     " requesting data to the Presenter");
         }

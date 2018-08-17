@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 public class Med implements Comparable<Med> {
-    private static final String TAG = "Med";
+
     public String name;
     public String description;
     public String id;
@@ -25,15 +25,6 @@ public class Med implements Comparable<Med> {
     public List<Reminder> reminders = new ArrayList<>();
 
     public Med() {
-    }
-
-    public Med(String name, String description, long startDate, long endDate, String id, List<Reminder> reminders) {
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.id = id;
-        this.reminders = reminders;
     }
 
     @Override
@@ -65,18 +56,8 @@ public class Med implements Comparable<Med> {
         reminders.add(newReminder);
     }
 
-    @Exclude
-    public void updateReminderDayState(int index, Map<String, Boolean> newDayState) {
-        getReminder(index).updateReminderDayStateMap(newDayState);
-    }
-
     private Reminder getReminder(int reminderIndex) {
         return reminders.get(reminderIndex);
-    }
-
-    @Exclude
-    public void updateReminderTimeOfDay(int index, long newTimeOfDay) {
-        getReminder(index).updateReminderTimeOfDay(newTimeOfDay);
     }
 
     @Override

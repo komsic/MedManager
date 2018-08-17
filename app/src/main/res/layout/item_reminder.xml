@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:onClick="onDayReminderClick"
         android:layout_marginEnd="4dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:text="@string/days"/>
@@ -29,7 +28,6 @@
         android:id="@+id/text_time_of_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onTimeReminderClick"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:textColor="@color/colorPrimary"
         android:text="@string/reminder_time" />
@@ -39,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@string/cancel_button"
         android:layout_marginStart="16dp"
         app:srcCompat="@drawable/ic_cancel" />
 </LinearLayout>

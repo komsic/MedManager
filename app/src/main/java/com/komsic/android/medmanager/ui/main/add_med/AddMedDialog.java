@@ -10,7 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -28,7 +29,6 @@ import static com.komsic.android.medmanager.util.CalendarUtil.parseDateFromStrin
  */
 
 public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
-    private static final String TAG = "AddMedDialog";
 
     private static final String POSITION = "index";
     private static final String EDIT_STATUS = "isEdit";
@@ -78,22 +78,30 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
         mEditEndDate = dialogView.findViewById(R.id.edit_end_date);
         processDateOperation(mEditStartDate, mEditEndDate);
 
-        FrameLayout frameDone = dialogView.findViewById(R.id.frame_done);
+        ImageButton frameDone = dialogView.findViewById(R.id.frame_done);
         frameDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Add a new med
-                mPresenter.onDoneClicked(mIsEdit, mPosition,
-                        mEditName.getText().toString(),
-                        mEditDescription.getText().toString(),
-                        parseDateFromString(mEditStartDate.getText().toString()).getTime(),
-                        parseDateFromString(mEditEndDate.getText().toString()).getTime());
+                if (mEditName.getText().length() <= 0 ||
+                        mEditDescription.getText().length() <= 0 ||
+                        mEditStartDate.getText().length() <= 0 ||
+                        mEditEndDate.getText().length() <= 0) {
+                    Toast.makeText(getBaseActivity(), "You need to fill all required",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    mPresenter.onDoneClicked(mIsEdit, mPosition,
+                            mEditName.getText().toString(),
+                            mEditDescription.getText().toString(),
+                            parseDateFromString(mEditStartDate.getText().toString()).getTime(),
+                            parseDateFromString(mEditEndDate.getText().toString()).getTime());
 
-                mPresenter.onDismiss();
+                    mPresenter.onDismiss();
+                }
             }
         });
 
-        FrameLayout frameCancel = dialogView.findViewById(R.id.frame_cancel);
+        ImageButton frameCancel = dialogView.findViewById(R.id.frame_cancel);
         frameCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

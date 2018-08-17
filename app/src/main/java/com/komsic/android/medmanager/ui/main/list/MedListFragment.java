@@ -35,7 +35,6 @@ import static android.content.Context.SEARCH_SERVICE;
 public class MedListFragment extends BaseFragment implements
         MedListMvpView, MedListAdapter.ItemInteractionListener {
 
-    private static final String TAG = "MedListFragment";
 
     private MedListAdapter mAdapter;
     private MedListMvpPresenter<MedListMvpView> mPresenter;
@@ -158,7 +157,7 @@ public class MedListFragment extends BaseFragment implements
     @Override
     public void notifyMedRemoved(int position) {
         Toast.makeText(getBaseActivity(), "Med deleted", Toast.LENGTH_SHORT).show();
-        mAdapter.notifyItemRemoved(position);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -170,8 +169,8 @@ public class MedListFragment extends BaseFragment implements
     @Override
     public void onStart() {
         super.onStart();
-//        if (mPresenter == null) {
-//            mPresenter = new MedListPresenter<>(DataManager.getInstance());
-//        }
+        if (mPresenter == null) {
+            mPresenter = new MedListPresenter<>(DataManager.getInstance());
+        }
     }
 }

@@ -28,7 +28,7 @@ import java.util.List;
 public class MedListAdapter extends RecyclerView.Adapter<MedListAdapter.MedListViewHolder>
         implements Filterable{
 
-    private static final String TAG = "MedListAdapter";
+
     private final Context mContext;
     private List<Med> mMedList;
     private List<Med> filteredList;

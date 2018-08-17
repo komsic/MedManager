@@ -24,8 +24,6 @@ import static com.komsic.android.medmanager.data.sync.SyncAlarmService.getStartI
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "AlarmReceiver";
-
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ACTION_NOTIFY.equals(intent.getAction())) {

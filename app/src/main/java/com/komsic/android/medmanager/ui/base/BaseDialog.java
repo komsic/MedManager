@@ -48,6 +48,4 @@ public abstract class BaseDialog extends DialogFragment implements DialogMvpView
     public BaseActivity getBaseActivity() {
         return mActivity;
     }
-
-
 }

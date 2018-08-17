@@ -3,7 +3,6 @@ package com.komsic.android.medmanager.data.model;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
-import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.text.SimpleDateFormat;
@@ -12,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by komsic on 4/13/2018.
@@ -23,14 +21,9 @@ public class Reminder implements Comparable<Reminder> {
     public Map<String, Boolean> dayStates = new HashMap<>();
 
     @Exclude
-    public String[] daysOfTheWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
+    public static String[] daysOfTheWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
     public Reminder() {
-    }
-
-    public Reminder(long timeOfDay, Map<String, Boolean> dayStates) {
-        this.timeOfDay = CalendarUtil.convertToTime(timeOfDay);
-        this.dayStates = dayStates;
     }
 
     @Override
@@ -66,33 +59,8 @@ public class Reminder implements Comparable<Reminder> {
     }
 
     @Exclude
-    public Map<String, Boolean> updateDayReminder(boolean... dayOfWeekStates){
-        for (int i = 0; i < daysOfTheWeek.length; i++) {
-            dayStates.put(daysOfTheWeek[i], dayOfWeekStates[i]);
-        }
-
-        return dayStates;
-    }
-
-    @Exclude
     public boolean getDayState(int day){
         return dayStates.get(daysOfTheWeek[day]);
-    }
-
-    @Exclude
-    public boolean containsTime(Reminder[] reminders) {
-        Reminder[] rems = reminders;
-
-        boolean result;
-        for (Reminder r : rems) {
-            result = timeOfDay == r.timeOfDay;
-            //noinspection PointlessBooleanExpression
-            if (result == true) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @Exclude
@@ -103,33 +71,12 @@ public class Reminder implements Comparable<Reminder> {
         return dayStates.get(day.toLowerCase());
     }
 
-    @Exclude
-    public boolean isInDataMap(Map<Reminder, Set<String>> reminderListMap) {
-        for (Reminder reminder : reminderListMap.keySet()) {
-            if (timeOfDay == reminder.timeOfDay) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Exclude
-    public void updateReminderDayStateMap(Map<String, Boolean> newDayState) {
-        dayStates = newDayState;
-    }
-
-    @Exclude
-    public void updateReminderTimeOfDay(long newTimeOfDay) {
-        timeOfDay = newTimeOfDay;
-    }
-
     @Override
     public String toString() {
         return CalendarUtil.getTimeInString(timeOfDay) + " | " + dayStates + "\t";
     }
 
     public void updateCurrentReminderDayState(boolean status, int dayOfTheWeek) {
-        dayStates.put(DataManager.daysOfTheWeek[dayOfTheWeek], status);
+        dayStates.put(daysOfTheWeek[dayOfTheWeek], status);
     }
 }

@@ -10,7 +10,6 @@ import com.komsic.android.medmanager.ui.base.BasePresenter;
 
 public class NewUserPresenter<V extends NewUserMvpView> extends BasePresenter<V>
         implements OnCompleteListener<AuthResult>, NewUserMvpPresenter<V> {
-    private static final String TAG = "NewUserPresenter";
 
     private String mFullName;
     private String mUsername;

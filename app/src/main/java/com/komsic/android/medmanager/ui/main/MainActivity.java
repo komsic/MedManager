@@ -23,7 +23,6 @@ import com.komsic.android.medmanager.ui.splash.SplashActivity;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
-    private static final String TAG = "MainActivity";
 
     private MainMvpPresenter<MainMvpView> mPresenter;
     private TabLayout tabLayout;

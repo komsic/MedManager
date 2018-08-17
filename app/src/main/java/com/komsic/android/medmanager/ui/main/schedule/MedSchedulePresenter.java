@@ -12,7 +12,6 @@ import java.util.List;
 
 public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePresenter<V>
         implements MedScheduleMvpPresenter<V>, DataManager.AlarmItemEvent {
-    private static final String TAG = "MedSchedulePresenter";
     private long mSelectedDate;
 
     MedSchedulePresenter(DataManager dataManager) {

@@ -27,8 +27,6 @@ public class DetailActivity extends BaseActivity implements DetailMvpView,
     public static final int END_DAY_TEXT = 4;
 
 
-    private static final String TAG = DetailActivity.class.getSimpleName();
-
     private TextView medNameText, medDescriptionText, startDayText, endDayText;
     private DetailMvpPresenter<DetailMvpView> mPresenter;
     private ReminderItemAdapter mReminderItemAdapter;

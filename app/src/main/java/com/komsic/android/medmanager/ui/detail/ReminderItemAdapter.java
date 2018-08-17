@@ -22,7 +22,7 @@ public class ReminderItemAdapter
     private List<Reminder> mReminderList;
     private ReminderItemAdapterEvent mReminderItemAdapterEvent;
 
-    public ReminderItemAdapter(ReminderItemAdapterEvent reminderItemAdapterEvent) {
+    ReminderItemAdapter(ReminderItemAdapterEvent reminderItemAdapterEvent) {
         mReminderList = new ArrayList<>();
         mReminderItemAdapterEvent = reminderItemAdapterEvent;
     }
@@ -121,7 +121,7 @@ public class ReminderItemAdapter
         TextView dayStates;
         ImageView deleteItem;
 
-        public ReminderItemViewHolder(View itemView) {
+        ReminderItemViewHolder(View itemView) {
             super(itemView);
 
             timeText = itemView.findViewById(R.id.text_time_of_day);

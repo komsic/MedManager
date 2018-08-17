@@ -29,7 +29,6 @@ import java.util.List;
  */
 
 public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvpView{
-    private static final String TAG = "MedScheduleFragment";
 
     private String selectedDate;
     private MedScheduleAdapter adapter;
