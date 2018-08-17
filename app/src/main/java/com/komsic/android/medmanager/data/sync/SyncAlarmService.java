@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -28,11 +29,20 @@ public class SyncAlarmService extends IntentService
         implements DataManager.AlarmItemEvent, DataManager.SignOutEvent {
     private static final String TAG = "SyncAlarmService";
 
-    public static final String ACTION_NOTIFY_EXTRA = "com.komsic.android.med_manager.ACTION_NOTIFY.medNames";
-    public static final String ACTION_NOTIFY = "com.komsic.android.med_manager.ACTION_NOTIFY";
-    public static final String ACTION_SERVICE = "com.komsic.android.med_manager.ACTION_SERVICE";
-    public static final String ACTION_INIT_SYNC_ALARM = "com.komsic.android.med_manager.ACTION_INIT_SYNC_ALARM";
-    public static final String ACTION_SET__SYNC_ALARM = "com.komsic.android.med_manager.ACTION_SET__SYNC_ALARM";
+    public static final String ACTION_NOTIFY_EXTRA =
+            "com.komsic.android.med_manager.ACTION_NOTIFY.medNames";
+    public static final String ACTION_NOTIFY =
+            "com.komsic.android.med_manager.ACTION_NOTIFY";
+    public static final String ACTION_SERVICE =
+            "com.komsic.android.med_manager.ACTION_SERVICE";
+    public static final String ACTION_INIT_SYNC_ALARM =
+            "com.komsic.android.med_manager.ACTION_INIT_SYNC_ALARM";
+    public static final String ACTION_SET__SYNC_ALARM =
+            "com.komsic.android.med_manager.ACTION_SET__SYNC_ALARM";
+    public static final String EXTRA_MAIN_ACTIVITY_SERVICE_STATUS =
+            "com.komsic.android.med_manager.ACTION_SET__SYNC_ALARM";
+    public static final String MAIN_ACTIVITY_SERVICE_STATUS =
+            "com.komsic.android.med_manager.ACTION_SET__SYNC_ALARM";
 
     private List<Alarm> mAlarmList;
 
@@ -44,6 +54,7 @@ public class SyncAlarmService extends IntentService
         }
     }
 
+    @NonNull
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SyncAlarmService.class);
     }
@@ -58,6 +69,10 @@ public class SyncAlarmService extends IntentService
                 mAlarmList = DataManager.getInstance()
                         .getScheduleListForSelectedDate(System.currentTimeMillis());
 
+                onAlarmListChanged(mAlarmList);
+            } else if (MAIN_ACTIVITY_SERVICE_STATUS.equals(intent.getAction())) {
+                Log.e(TAG, "onHandleIntent: MAIN_ACTIVITY_SERVICE_STATUS");
+                mAlarmList = DataManager.getInstance().getScheduleListForSelectedDate(-1);
                 onAlarmListChanged(mAlarmList);
             }
         }
@@ -86,6 +101,7 @@ public class SyncAlarmService extends IntentService
     private void openMainActivity() {
         Intent intent = MainActivity.getStartIntent(this);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(EXTRA_MAIN_ACTIVITY_SERVICE_STATUS, true);
         startActivity(intent);
     }
 
@@ -102,7 +118,6 @@ public class SyncAlarmService extends IntentService
 
     @Override
     public void onAlarmListChanged(List<Alarm> alarmList) {
-
         if (mAlarmList != null) {
             cancelAllAlarm(mAlarmList);
         }

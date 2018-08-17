@@ -147,10 +147,12 @@ public class AddMedDialog extends BaseDialog implements AddMedDialogMvpView{
 
     @Override
     public void initView(Med medFromList, int position) {
-        mEditName.setText(medFromList.name);
-        mEditDescription.setText(medFromList.description);
-        mEditStartDate.setText(CalendarUtil.getDateInString(medFromList.startDate));
-        mEditEndDate.setText(CalendarUtil.getDateInString(medFromList.endDate));
+        if (medFromList != null) {
+            mEditName.setText(medFromList.name);
+            mEditDescription.setText(medFromList.description);
+            mEditStartDate.setText(CalendarUtil.getDateInString(medFromList.startDate));
+            mEditEndDate.setText(CalendarUtil.getDateInString(medFromList.endDate));
+        }
     }
 
     @Override

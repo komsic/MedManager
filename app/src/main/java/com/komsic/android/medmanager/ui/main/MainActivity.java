@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseActivity;
 import com.komsic.android.medmanager.ui.main.add_med.AddMedDialog;
 import com.komsic.android.medmanager.ui.main.list.MedListFragment;
@@ -33,6 +34,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boolean isServiceCreated = getIntent()
+                .getBooleanExtra(SyncAlarmService.EXTRA_MAIN_ACTIVITY_SERVICE_STATUS, false);
+
         tabLayout = findViewById(R.id.tab_layout);
         medPager = findViewById(R.id.main_view_pager);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -42,6 +46,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
 
         setUp();
+
+        if (!isServiceCreated) {
+            mPresenter.startSyncAlarmService();
+        }
     }
 
     public static Intent getStartIntent(Context context) {
@@ -88,6 +96,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mPresenter.openAddMedDialog();
             }
         });
+    }
+
+    @Override
+    public void openSyncAlarmService() {
+        Intent intent = SyncAlarmService.getStartIntent(this);
+        intent.setAction(SyncAlarmService.MAIN_ACTIVITY_SERVICE_STATUS);
+        startService(intent);
     }
 
     @Override

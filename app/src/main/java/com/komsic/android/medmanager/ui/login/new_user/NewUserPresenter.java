@@ -39,7 +39,7 @@ public class NewUserPresenter<V extends NewUserMvpView> extends BasePresenter<V>
             if (!mUsername.isEmpty() && !mFullName.isEmpty()) {
                 getDataManager().storeUser(mFullName, mUsername);
             }
-            getMvpView().openMainActivity();
+            getMvpView().openSyncAlarmService();
         } else {
             getMvpView().issueError();
         }

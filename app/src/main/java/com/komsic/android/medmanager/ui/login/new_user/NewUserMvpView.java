@@ -10,4 +10,6 @@ public interface NewUserMvpView extends MvpView {
     void openMainActivity();
 
     void issueError();
+
+    void openSyncAlarmService();
 }

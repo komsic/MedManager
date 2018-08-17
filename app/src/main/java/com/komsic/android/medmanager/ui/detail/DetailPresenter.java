@@ -45,7 +45,6 @@ public class DetailPresenter<V extends DetailMvpView> extends BasePresenter<V>
         reminder.init();
         getDataManager().getMed().addReminder(reminder);
         getMvpView().updateReminderList(reminder);
-        getDataManager().processAlarm();
     }
 
     @Override

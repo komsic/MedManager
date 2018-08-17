@@ -32,12 +32,6 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
     }
 
     @Override
-    public void onDetach() {
-        getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
-        super.onDetach();
-    }
-
-    @Override
     public void onAlarmListChanged(List<Alarm> alarm) {
         getMvpView().updateList(getDataManager().getScheduleListForSelectedDate(mSelectedDate));
     }
@@ -46,5 +40,12 @@ public class MedSchedulePresenter<V extends MedScheduleMvpView> extends BasePres
     public void signOut() {
         getDataManager().signOut();
         getMvpView().onSignOutDone();
+    }
+
+    @Override
+    public void onDetach() {
+        getDataManager().removeListener(DataManager.CHILD_EVENT_LISTENER);
+        getDataManager().removeAlarmEvent();
+        super.onDetach();
     }
 }

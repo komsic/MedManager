@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
+import com.komsic.android.medmanager.data.sync.SyncAlarmService;
 import com.komsic.android.medmanager.ui.base.BaseFragment;
 import com.komsic.android.medmanager.ui.main.MainActivity;
 
@@ -91,6 +92,14 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
         mProgressBar.setVisibility(View.GONE);
         Toast.makeText(getBaseActivity(), "Error creating user. Please retry",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openSyncAlarmService() {
+        Intent intent = SyncAlarmService.getStartIntent(getBaseActivity());
+        intent.setAction(SyncAlarmService.ACTION_SERVICE);
+        getBaseActivity().startService(intent);
+        getBaseActivity().finish();
     }
 
     @Override

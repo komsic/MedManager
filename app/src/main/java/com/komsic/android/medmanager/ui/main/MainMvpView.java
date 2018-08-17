@@ -8,6 +8,8 @@ import com.komsic.android.medmanager.ui.base.MvpView;
 
 interface MainMvpView extends MvpView {
 
+    void openSyncAlarmService();
+
     void openSplashActivity();
 
     void openAddMedDialog();

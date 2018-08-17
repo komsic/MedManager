@@ -166,4 +166,12 @@ public class MedListFragment extends BaseFragment implements
         AddMedDialog dialogAddMed = AddMedDialog.newInstance(position, true);
         dialogAddMed.show(getBaseActivity().getSupportFragmentManager(), "DialogAddMed");
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        if (mPresenter == null) {
+//            mPresenter = new MedListPresenter<>(DataManager.getInstance());
+//        }
+    }
 }

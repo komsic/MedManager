@@ -41,27 +41,24 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public static final int VALUE_EVENT_LISTENER = 1;
     public static final int CHILD_EVENT_LISTENER = 2;
-
     public static String[] daysOfTheWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
     private static DataManager sDataManager;
 
     private Map<String, Boolean> mDayStateMap;
-
     private List<Med> mMedList;
     private List<Alarm> mAlarmList;
-    private AlarmItemEvent mAlarmEvent;
-    private SignOutEvent mSignOutEvent;
-
-    private AlarmItemEvent mServiceAlarmEvent;
 
     private Med mMed;
     private User mCurrentUser;
 
+    private AlarmItemEvent mAlarmEvent;
+    private SignOutEvent mSignOutEvent;
+    private AlarmItemEvent mServiceAlarmEvent;
+    private MedEventListener mMedEventListener;
+
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mChildDatabaseReference;
-
-    private MedEventListener mMedEventListener;
 
     public static DataManager getInstance() {
         if (sDataManager == null) {
@@ -129,15 +126,16 @@ public class DataManager implements ValueEventListener, ChildEventListener,
             if (index != -1) {
                 mMedList.get(index).update(med);
 
-//                if (mMedEventListener != null) {
-//                    mMedEventListener.onMedChanged(index);
-//                }
-
-                if (mAlarmEvent != null) {
-                    mAlarmEvent.onAlarmListChanged(null);
+                if (mMedEventListener != null) {
+                    mMedEventListener.onMedChanged(index);
+                } else {
+                    Log.e(TAG, "onChildChanged: mMedEventListener is null");
                 }
 
                 processAlarm();
+                if (mAlarmEvent != null) {
+                    mAlarmEvent.onAlarmListChanged(null);
+                }
             } else {
                 throw new UnsupportedOperationException("Med not present");
             }
@@ -187,16 +185,18 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mDatabaseReference.addListenerForSingleValueEvent(this);
     }
 
-    public void removeListener(int whichListener) {
-        if (sDataManager != null) {
-            switch (whichListener) {
-                case VALUE_EVENT_LISTENER:
-                    mDatabaseReference.removeEventListener((ValueEventListener) this);
-                    break;
-                case CHILD_EVENT_LISTENER:
-                    mChildDatabaseReference.removeEventListener((ChildEventListener) this);
-                    break;
-            }
+    private void processAlarm() {
+        Log.e(TAG, "processAlarm: ");
+        mAlarmList = getScheduleListForSelectedDate(-1);
+
+        if (mServiceAlarmEvent != null) {
+            mServiceAlarmEvent.onAlarmListChanged(mAlarmList);
+        } else {
+            Log.e(TAG, "processAlarm: mServiceAlarmEvent is null");
+        }
+
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onAlarmListChanged(mAlarmList);
         }
     }
 
@@ -332,15 +332,22 @@ public class DataManager implements ValueEventListener, ChildEventListener,
         mMedList.clear();
     }
 
-    public void processAlarm() {
-        mAlarmList = getScheduleListForSelectedDate(-1);
-
-        if (mServiceAlarmEvent != null) {
-            mServiceAlarmEvent.onAlarmListChanged(mAlarmList);
-        }
-
-        if (mAlarmEvent != null) {
-            mAlarmEvent.onAlarmListChanged(mAlarmList);
+    public void removeListener(int whichListener) {
+        if (sDataManager != null) {
+            switch (whichListener) {
+                case VALUE_EVENT_LISTENER:
+                    if (mDatabaseReference != null) {
+                        mDatabaseReference.removeEventListener((ValueEventListener) this);
+                        mDatabaseReference = null;
+                    }
+                    break;
+                case CHILD_EVENT_LISTENER:
+                    if (mChildDatabaseReference != null) {
+                        mChildDatabaseReference.removeEventListener((ChildEventListener) this);
+                        mChildDatabaseReference = null;
+                    }
+                    break;
+            }
         }
     }
 
@@ -424,10 +431,12 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
             mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/" +
                     mCurrentUser.getUid() + "/userMedList/" + medToBeUpdated.id);
-            if (mDatabaseReference.updateChildren(medToBeUpdated.toMap()).isSuccessful()) {
-                mMedEventListener.onMedChanged(position);
-            }
+            mDatabaseReference.updateChildren(medToBeUpdated.toMap());
         }
+    }
+
+    public void removeAlarmEvent() {
+        mAlarmEvent = null;
     }
 
     public interface MedEventListener{
