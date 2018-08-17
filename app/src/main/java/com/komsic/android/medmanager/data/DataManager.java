@@ -1,7 +1,6 @@
 package com.komsic.android.medmanager.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +35,6 @@ import java.util.Map;
 
 public class DataManager implements ValueEventListener, ChildEventListener,
         FirebaseAuth.AuthStateListener {
-    private static final String TAG = "DataManager";
 
     public static final int VALUE_EVENT_LISTENER = 1;
     public static final int CHILD_EVENT_LISTENER = 2;
@@ -52,6 +50,7 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     private SignOutEvent mSignOutEvent;
     private AlarmItemEvent mServiceAlarmEvent;
     private MedEventListener mMedEventListener;
+    private MedEventListener mDetailMedEventListener;
 
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mChildDatabaseReference;
@@ -82,9 +81,9 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        if (dataSnapshot != null && mMedEventListener != null) {
+        if (dataSnapshot != null && mDetailMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
-            mMedEventListener.onMedAdded();
+            mDetailMedEventListener.onMedAdded();
         }
     }
 
@@ -111,8 +110,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
                 if (mMedEventListener != null) {
                     mMedEventListener.onMedChanged(index);
-                } else {
-                    Log.e(TAG, "onChildChanged: mMedEventListener is null");
                 }
 
                 processAlarm();
@@ -162,20 +159,17 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     public void addListenerForSingleValueEvent(String s, MedEventListener medEventListener) {
-        mMedEventListener = medEventListener;
+        mDetailMedEventListener = medEventListener;
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/"
                 + mCurrentUser.getUid() + "/userMedList/" + s);
         mDatabaseReference.addListenerForSingleValueEvent(this);
     }
 
     private void processAlarm() {
-        Log.e(TAG, "processAlarm: ");
         mAlarmList = getScheduleListForSelectedDate(-1);
 
         if (mServiceAlarmEvent != null) {
             mServiceAlarmEvent.onAlarmListChanged(mAlarmList);
-        } else {
-            Log.e(TAG, "processAlarm: mServiceAlarmEvent is null");
         }
 
         if (mAlarmEvent != null) {
@@ -239,7 +233,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
 
     public void removeMed(int position) {
         Med deletedMed = mMedList.get(position);
-        Log.e(TAG, "removeMed: " + position + " | " + deletedMed);
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         databaseRef.child("users/" + mCurrentUser.getUid() + "/userMedList/" +
@@ -318,12 +311,14 @@ public class DataManager implements ValueEventListener, ChildEventListener,
                     if (mDatabaseReference != null) {
                         mDatabaseReference.removeEventListener((ValueEventListener) this);
                         mDatabaseReference = null;
+                        mDetailMedEventListener = null;
                     }
                     break;
                 case CHILD_EVENT_LISTENER:
                     if (mChildDatabaseReference != null) {
                         mChildDatabaseReference.removeEventListener((ChildEventListener) this);
                         mChildDatabaseReference = null;
+                        mMedEventListener = null;
                     }
                     break;
             }

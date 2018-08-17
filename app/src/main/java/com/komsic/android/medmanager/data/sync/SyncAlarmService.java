@@ -8,12 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;
 import com.komsic.android.medmanager.ui.main.MainActivity;
-import com.komsic.android.medmanager.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +25,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class SyncAlarmService extends IntentService
         implements DataManager.AlarmItemEvent, DataManager.SignOutEvent {
-    private static final String TAG = "SyncAlarmService";
 
     public static final String ACTION_NOTIFY_EXTRA =
             "com.komsic.android.med_manager.ACTION_NOTIFY.medNames";
@@ -71,7 +68,6 @@ public class SyncAlarmService extends IntentService
 
                 onAlarmListChanged(mAlarmList);
             } else if (MAIN_ACTIVITY_SERVICE_STATUS.equals(intent.getAction())) {
-                Log.e(TAG, "onHandleIntent: MAIN_ACTIVITY_SERVICE_STATUS");
                 mAlarmList = DataManager.getInstance().getScheduleListForSelectedDate(-1);
                 onAlarmListChanged(mAlarmList);
             }
@@ -157,9 +153,6 @@ public class SyncAlarmService extends IntentService
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.cancel(setPendingIntentForAlarm(alarm));
-            Log.e(TAG, "cancelAlarm: canceled alarm: " + alarm.getTimeFrom00HrsLong() + " | "
-                    + CalendarUtil.getTimeInString(alarm.getTimeFrom00HrsLong()) + " | "
-                    + alarm.medNames);
         }
     }
 
@@ -181,9 +174,6 @@ public class SyncAlarmService extends IntentService
 
             alarmManager.setExact(AlarmManager.RTC,
                     alarm.getTimeFrom00HrsLong(), setPendingIntentForAlarm(alarm));
-            Log.e(TAG, "addAlarm: added alarm: " + alarm.getTimeFrom00HrsLong() + " | "
-                    + CalendarUtil.getTimeInString(alarm.getTimeFrom00HrsLong())
-                    + " | " + alarm.medNames);
         }
     }
 }
