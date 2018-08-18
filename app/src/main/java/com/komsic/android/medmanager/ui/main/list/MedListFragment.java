@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.komsic.android.medmanager.R;
@@ -40,6 +41,7 @@ public class MedListFragment extends BaseFragment implements
     private MedListMvpPresenter<MedListMvpView> mPresenter;
     private ProgressBar mProgressBar;
     private RecyclerView recyclerView;
+    private TextView mEmptyView;
     private boolean isAdapterSetUp;
 
     public static MedListFragment newInstance() {
@@ -62,10 +64,13 @@ public class MedListFragment extends BaseFragment implements
         recyclerView = rootView.findViewById(R.id.recycler_view);
         isAdapterSetUp = false;
         mProgressBar = rootView.findViewById(R.id.progress_bar);
+        mEmptyView = rootView.findViewById(R.id.empty_view);
+        mEmptyView.setVisibility(View.VISIBLE);
 
         mPresenter = new MedListPresenter<>(DataManager.getInstance());
         mPresenter.onAttach(this);
         mPresenter.onViewPrepared();
+
 
         return rootView;
     }
@@ -147,6 +152,8 @@ public class MedListFragment extends BaseFragment implements
             });
             helper.attachToRecyclerView(recyclerView);
         }
+
+        mEmptyView.setVisibility(mAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -157,7 +164,9 @@ public class MedListFragment extends BaseFragment implements
     @Override
     public void notifyMedRemoved(int position) {
         Toast.makeText(getBaseActivity(), "Med deleted", Toast.LENGTH_SHORT).show();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemRemoved(position);
+
+        mEmptyView.setVisibility(mAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

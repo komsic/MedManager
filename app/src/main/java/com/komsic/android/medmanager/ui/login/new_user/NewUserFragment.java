@@ -109,7 +109,7 @@ public class NewUserFragment extends BaseFragment implements NewUserMvpView, Vie
             String userName = usernameEditText.getText().toString().trim();
 
             if (email.contains("@") && email.length() > 4 &&
-                    password.length() > 8 &&
+                    password.length() >= 8 &&
                     !fullName.isEmpty() &&
                     !userName.isEmpty()) {
                 usernameInputLayout.setError(null);

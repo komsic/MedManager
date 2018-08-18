@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -35,6 +36,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     private MedScheduleMvpPresenter<MedScheduleMvpView> mPresenter;
     private CalendarView mCalendarView;
     private ProgressBar mProgressBar;
+    private TextView mEmptyView;
 
     public static MedScheduleFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,6 +58,8 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
         mCalendarView = rootView.findViewById(R.id.tv);
         RecyclerView recyclerView = rootView.findViewById(R.id.list);
         mProgressBar = rootView.findViewById(R.id.progress_bar);
+        mEmptyView = rootView.findViewById(R.id.empty_view);
+        mEmptyView.setVisibility(View.VISIBLE);
 
         selectedDate = CalendarUtil.getDateInString(mCalendarView.getDate());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -120,6 +124,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     @Override
     public void updateList(List<Alarm> medDataList) {
         adapter.addScheduleList(medDataList);
+        mEmptyView.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -116,8 +116,6 @@ public class DataManager implements ValueEventListener, ChildEventListener,
                 if (mAlarmEvent != null) {
                     mAlarmEvent.onAlarmListChanged(null);
                 }
-            } else {
-                throw new UnsupportedOperationException("Med not present");
             }
         }
     }
@@ -159,10 +157,12 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     public void addListenerForSingleValueEvent(String s, MedEventListener medEventListener) {
-        mDetailMedEventListener = medEventListener;
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/"
-                + mCurrentUser.getUid() + "/userMedList/" + s);
-        mDatabaseReference.addListenerForSingleValueEvent(this);
+        if (mCurrentUser != null) {
+            mDetailMedEventListener = medEventListener;
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/"
+                    + mCurrentUser.getUid() + "/userMedList/" + s);
+            mDatabaseReference.addListenerForSingleValueEvent(this);
+        }
     }
 
     private void processAlarm() {

@@ -53,4 +53,6 @@
     <string name="fri">Fri</string>
     <string name="sat">Sat</string>
     <string name="sun">Sun</string>
+    <string name="med_list_empty_view_message">It seems you have not added any meds. Get started by pressing the plus button.</string>
+    <string name="med_schedule_empty_view">No med is schedule for this day</string>
 </resources>
