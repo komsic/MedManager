@@ -14,7 +14,8 @@
         android:textColor="@color/colorPrimary"
         android:layout_marginEnd="4dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-        android:text="@string/days"/>
+        android:text="@string/days"
+        android:layout_marginRight="4dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +23,8 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:textColor="@color/colorPrimary"
         android:layout_marginEnd="4dp"
-        android:text="@string/at" />
+        android:text="@string/at"
+        android:layout_marginRight="4dp" />
 
     <TextView
         android:id="@+id/text_time_of_day"
@@ -39,5 +41,6 @@
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/cancel_button"
         android:layout_marginStart="16dp"
-        app:srcCompat="@drawable/ic_cancel" />
+        app:srcCompat="@drawable/ic_cancel"
+        android:layout_marginLeft="16dp" />
 </LinearLayout>

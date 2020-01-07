@@ -1,6 +1,6 @@
 package com.komsic.android.medmanager.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -80,16 +80,16 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        if (dataSnapshot != null && mDetailMedEventListener != null) {
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if (mDetailMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mDetailMedEventListener.onMedAdded();
         }
     }
 
     @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        if (dataSnapshot != null && mMedEventListener != null) {
+    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+        if (mMedEventListener != null) {
             mMed = dataSnapshot.getValue(Med.class);
             mMedList.add(mMed);
             processAlarm();
@@ -98,57 +98,53 @@ public class DataManager implements ValueEventListener, ChildEventListener,
     }
 
     @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        if (dataSnapshot != null) {
-            Med med = dataSnapshot.getValue(Med.class);
+    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+        Med med = dataSnapshot.getValue(Med.class);
 
-            //noinspection ConstantConditions
-            int index = Med.get(mMedList, med.id);
+        //noinspection ConstantConditions
+        int index = Med.get(mMedList, med.id);
 
-            if (index != -1) {
-                mMedList.get(index).update(med);
-
-                if (mMedEventListener != null) {
-                    mMedEventListener.onMedChanged(index);
-                }
-
-                processAlarm();
-                if (mAlarmEvent != null) {
-                    mAlarmEvent.onAlarmListChanged(null);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        if (dataSnapshot != null) {
-            Med removedMed = dataSnapshot.getValue(Med.class);
-
-            //noinspection ConstantConditions
-            int indexDeleted = Med.get(mMedList, removedMed.id);
-
-            mMedList.remove(indexDeleted);
+        if (index != -1) {
+            mMedList.get(index).update(med);
 
             if (mMedEventListener != null) {
-                mMedEventListener.onMedRemoved(indexDeleted);
-            }
-
-            if (mAlarmEvent != null) {
-                mAlarmEvent.onAlarmListChanged(null);
+                mMedEventListener.onMedChanged(index);
             }
 
             processAlarm();
+            if (mAlarmEvent != null) {
+                mAlarmEvent.onAlarmListChanged(null);
+            }
         }
     }
 
     @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+        Med removedMed = dataSnapshot.getValue(Med.class);
+
+        //noinspection ConstantConditions
+        int indexDeleted = Med.get(mMedList, removedMed.id);
+
+        mMedList.remove(indexDeleted);
+
+        if (mMedEventListener != null) {
+            mMedEventListener.onMedRemoved(indexDeleted);
+        }
+
+        if (mAlarmEvent != null) {
+            mAlarmEvent.onAlarmListChanged(null);
+        }
+
+        processAlarm();
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
 
     }
 
     @Override
-    public void onCancelled(DatabaseError databaseError) {
+    public void onCancelled(@NonNull DatabaseError databaseError) {
 
     }
 
@@ -246,15 +242,13 @@ public class DataManager implements ValueEventListener, ChildEventListener,
             databaseRef.child("users").child(user.getUid()).child("userInfo")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot != null) {
-                                mCurrentUser = dataSnapshot.getValue(User.class);
-                                setMedListListener();
-                            }
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            mCurrentUser = dataSnapshot.getValue(User.class);
+                            setMedListListener();
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
                     });

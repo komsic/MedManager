@@ -2,12 +2,13 @@ package com.komsic.android.medmanager.ui.detail.choose_day;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;

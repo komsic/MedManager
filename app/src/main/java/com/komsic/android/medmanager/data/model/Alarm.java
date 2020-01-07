@@ -1,6 +1,6 @@
 package com.komsic.android.medmanager.data.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
 import com.komsic.android.medmanager.util.CalendarUtil;
@@ -33,6 +33,7 @@ public class Alarm implements Comparable<Alarm> {
         return (int) timeOfDay;
     }
 
+    @NonNull
     @Exclude
     @Override
     public String toString() {

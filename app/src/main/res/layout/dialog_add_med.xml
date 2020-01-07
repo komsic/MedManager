@@ -53,8 +53,10 @@
                 android:contentDescription="@string/arrow_to_indicate_the_edit_text_is_a_drop_down"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 app:srcCompat="@drawable/ic_arrow_drop_down"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
 
         </RelativeLayout>
 
@@ -82,7 +84,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 app:srcCompat="@drawable/ic_arrow_drop_down"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentRight="true" />
         </RelativeLayout>
     </LinearLayout>
 

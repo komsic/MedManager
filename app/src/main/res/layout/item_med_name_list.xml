@@ -15,6 +15,7 @@
         android:layout_marginBottom="4dp"
         android:button="@null"
         android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-        tools:text="Amala" />
+        tools:text="Amala"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple" />
 
 </LinearLayout>

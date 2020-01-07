@@ -3,14 +3,18 @@ package com.komsic.android.medmanager.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -57,7 +61,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void setUp() {
-        FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(),
+                FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             private final Fragment[] mFragments = new Fragment[]{
                     MedScheduleFragment.newInstance(),
                     MedListFragment.newInstance()
@@ -68,6 +73,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     "Med List"
             };
 
+            @NonNull
             @Override
             public Fragment getItem(int position) {
                 return mFragments[position];

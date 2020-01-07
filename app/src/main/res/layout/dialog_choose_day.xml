@@ -21,7 +21,8 @@
             android:layout_marginEnd="35.5dp"
             android:background="@drawable/day_state"
             android:text="@string/mon"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginRight="35.5dp" />
 
         <TextView
             android:id="@+id/text_tue"
@@ -31,7 +32,8 @@
             android:background="@drawable/day_state"
             android:gravity="center"
             android:text="@string/tue"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginLeft="33.5dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +51,8 @@
             android:layout_marginEnd="35.5dp"
             android:background="@drawable/day_state"
             android:text="@string/wed"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginRight="35.5dp" />
 
         <TextView
             android:id="@+id/text_thu"
@@ -59,7 +62,8 @@
             android:background="@drawable/day_state"
             android:gravity="center"
             android:text="@string/thu"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginLeft="33.5dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -77,7 +81,8 @@
             android:layout_marginEnd="33.5dp"
             android:background="@drawable/day_state"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginRight="33.5dp" />
 
         <TextView
             android:id="@+id/text_sat"
@@ -87,7 +92,8 @@
             android:background="@drawable/day_state"
             android:gravity="center"
             android:text="@string/sat"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_marginLeft="33.5dp" />
     </LinearLayout>
 
     <TextView

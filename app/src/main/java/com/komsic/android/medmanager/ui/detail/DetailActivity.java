@@ -3,11 +3,12 @@ package com.komsic.android.medmanager.ui.detail;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
