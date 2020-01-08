@@ -11,6 +11,8 @@ public class User {
     private String username;
     private String uid;
 
+    public User() {}
+
     public User(String email, String fullName, String username, String uid) {
         this.email = email;
         this.fullName = fullName;
