@@ -1,10 +1,6 @@
 package com.komsic.android.medmanager.ui.main.schedule;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
@@ -92,7 +93,7 @@ public class MedScheduleFragment extends BaseFragment implements  MedScheduleMvp
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_schedule_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

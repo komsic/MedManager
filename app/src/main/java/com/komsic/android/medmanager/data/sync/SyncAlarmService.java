@@ -6,8 +6,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.model.Alarm;

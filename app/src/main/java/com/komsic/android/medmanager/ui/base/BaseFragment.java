@@ -1,7 +1,8 @@
 package com.komsic.android.medmanager.ui.base;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by komsic on 4/2/2018.

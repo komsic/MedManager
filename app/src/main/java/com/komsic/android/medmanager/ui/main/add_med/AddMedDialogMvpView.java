@@ -1,6 +1,6 @@
 package com.komsic.android.medmanager.ui.main.add_med;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.komsic.android.medmanager.data.model.Med;
 import com.komsic.android.medmanager.ui.base.DialogMvpView;

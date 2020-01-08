@@ -2,9 +2,6 @@ package com.komsic.android.medmanager.ui.login.sign_in;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.DataManager;
 import com.komsic.android.medmanager.data.sync.SyncAlarmService;

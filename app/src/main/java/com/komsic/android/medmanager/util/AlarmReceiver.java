@@ -5,7 +5,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 
 import com.komsic.android.medmanager.R;
 import com.komsic.android.medmanager.data.sync.SyncAlarmService;
@@ -35,9 +36,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             StringBuilder sb = new StringBuilder();
             sb.append("| ");
-            for (String s : strings) {
-                sb.append(s);
-                sb.append(" | ");
+            if (strings != null) {
+                for (String s : strings) {
+                    sb.append(s);
+                    sb.append(" | ");
+                }
             }
 
             // an Intent broadcast.

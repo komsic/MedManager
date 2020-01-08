@@ -1,6 +1,6 @@
 package com.komsic.android.medmanager.ui.base;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by komsic on 4/2/2018.
